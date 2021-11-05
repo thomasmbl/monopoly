@@ -6,68 +6,44 @@
 #include <string.h>
 #include <stdlib.h>
 
-void menuPrincipal() {
-    int choix=0;
-
-    do {
-        printf("=====| Que souhaitez vous faire ? |=====\n");
-        printf("1/ Lancer une nouvelle partie.\n"
-               "2/ Sauvegarder la partie en cours.\n"
-               "3/ Charger une ancienne partie.\n"
-               "4/ Afficher les regles.\n"
-               "5/ Afficher le nom des membres de l'equipe du projet.\n"
-               "6/ Quitter.\n>\n");
-        scanf("%d",&choix);
-        switch(choix) {
-            case 1 :
-                //Lancer une nouvelle partie.
-                break;
-
-            case 2 :
-                //Sauvegarder la partie en cours.
-                break;
-
-            case 3 :
-                //Charger une ancienne partie.
-                break;
-
-            case 4 :
-                //Afficher les regles.
-                break;
-
-            case 5 :
-                //Afficher le nom des membres de l'équipe du projet.
-                break;
-
-            case 6 :
-                //Quitter la partie.
-                break;
-
-            default : {
-                printf("Choix invalide !\n>");
-                break;
-            }
-        }
-    }while(choix != 6);
-
+int menuPrincipal() {
+    int choix = 0;
+    printf("=====| Que souhaitez vous faire ? |=====\n");
+    printf("1/ Lancer une nouvelle partie.\n"
+           "2/ Sauvegarder la partie en cours.\n"
+           "3/ Charger une ancienne partie.\n"
+           "4/ Afficher les regles.\n"
+           "5/ Afficher le nom des membres de l'equipe du projet.\n"
+           "6/ Quitter.\n");
+    printf("========================================\n>");
+    scanf("%d", &choix);
+    return choix;
 }
+
 
 
 //====================================================================================================================//
 //Procédure en référence au choix 1 du menu principal.
-void nouvellePartie() {
+Joueur* nouvellePartie(int* nbJoueurs) {
     int i=0;
-    unsigned int nbJoueurs=0;
 
-    printf("Combien de joueur etes-vous ?\n>");
-    scanf("%d",&nbJoueurs);
-    Joueur* listeJoueurs = (Joueur*) malloc( nbJoueurs * sizeof(char) );  // NE PAS OUBLIER DE FREE LISTEJOUEURS
-
-    for(i=1;i<=nbJoueurs;i++){
-        printf("Entrez le nom du joueur %d\n",i);
+    printf("\n=====| Combien de joueur etes-vous ? |=====\n>");
+    scanf("%d",nbJoueurs);
+    Joueur* listeJoueurs = (Joueur*) malloc( *nbJoueurs * sizeof(Joueur) );  // NE PAS OUBLIER DE FREE LISTEJOUEURS!!
+                                                                             // LORSQUE LA PARTIE SERA TERMINEE
+    for(i=0;i<*nbJoueurs;i++){
+        listeJoueurs[i].nomJoueur = (char*) malloc(sizeof(char));
+        printf("\n=| Entrez le nom du joueur %d |=\n>",i+1);
         scanf("%s", listeJoueurs[i].nomJoueur);
+
+        listeJoueurs[i].money = 1500;
+        listeJoueurs[i].position = 0;
+        printf("Banque: Vous recevez 1500 euros de bienvenue.\n\n");
     }
     //RESTE DU CODE
+
+
+    return listeJoueurs;
 
 }
 
@@ -99,7 +75,7 @@ void quitter(){
             break;
         }
     }while( (strcmp(verifChoix,"oui") != 0 && strcmp(verifChoix,"OUI") != 0)
-            &&
+                                           &&
             (strcmp(verifChoix,"non") != 0 && strcmp(verifChoix,"NON")) != 0 );
 
 }
