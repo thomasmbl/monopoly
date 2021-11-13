@@ -5,46 +5,277 @@
 #include "mesfonctions.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
-int menuPrincipal() {
-    int choix = 0;
-    printf("=====| Que souhaitez vous faire ? |=====\n");
+//====================================================================================================================//
+void menuPrincipal() {
+    printf("=====| Que souhaitez vous faire ? |=======================\n");
     printf("1/ Lancer une nouvelle partie.\n"
            "2/ Sauvegarder la partie en cours.\n"
            "3/ Charger une ancienne partie.\n"
            "4/ Afficher les regles.\n"
            "5/ Afficher le nom des membres de l'equipe du projet.\n"
            "6/ Quitter.\n");
-    printf("========================================\n>");
-    scanf("%d", &choix);
-    return choix;
+    printf("==========================================================\n>");
+}
+
+//====================================================================================================================//
+Case* initPlateau(Case* cases) {
+    cases = malloc(32*sizeof(Case));
+
+    //0. Case départ
+    cases[0].nomCase = "CASE DEPART";
+    cases[0].typeCase = 0;
+
+
+    //1. Propriété 1 du groupe 1
+    cases[1].nomCase = "HOTEL DE VILLE";
+    cases[1].typeCase = 1;
+    cases[1].groupe = 1;
+    cases[1].prix = 999999999 ;
+    cases[1].proprio = "Disponible";
+
+
+    //2. Taxe d’habitation : Payez 100€
+    cases[2].nomCase = "TAXE D'HABITATION";
+    cases[2].typeCase = 0;
+
+
+    //3. Propriété 2 du groupe 1
+    cases[3].nomCase = "PLACE DES TERREAUX";
+    cases[3].typeCase = 1;
+    cases[3].groupe = 1;
+    cases[3].prix = 999999999 ;
+    cases[3].proprio = "Disponible";
+
+
+    //4. Raccourci : Avancez à la case 13
+    cases[4].nomCase = "RACCOURCI";
+    cases[4].typeCase = 0;
+
+
+    //5. Propriété 1 du groupe 2
+    cases[5].nomCase = "PLACE BELLECOUR";
+    cases[5].typeCase = 1;
+    cases[5].groupe = 2;
+    cases[5].prix = 999999999 ;
+    cases[5].proprio = "Disponible";
+
+
+    //6. Tirez une carte communauté
+    cases[6].nomCase = "TIRAGE CARTE COMMUNAUTE";
+    cases[6].typeCase = 0;
+
+
+    //7. Propriété 2 du groupe 2
+    cases[7].nomCase = "CONFLUENCE";
+    cases[7].typeCase = 1;
+    cases[7].groupe = 2;
+    cases[7].prix = 999999999 ;
+    cases[7].proprio = "Disponible";
+
+
+    //8. Case prison
+    cases[8].nomCase = "CASE PRISON";
+    cases[8].typeCase = 0;
+
+
+    //9. Propriété 1 du groupe 3
+    cases[9].nomCase = "PART DIEU";
+    cases[9].typeCase = 1;
+    cases[9].groupe = 3;
+    cases[9].prix = 999999999 ;
+    cases[9].proprio = "Disponible";
+
+
+    //10. Impôt sur la fortune : Payez 100€
+    cases[10].nomCase = "IMPOT SUR LA FORTUNE";
+    cases[10].typeCase = 0;
+
+
+    //11. Propriété 2 du groupe 3
+    cases[11].nomCase = "LES HALLES";
+    cases[11].typeCase = 1;
+    cases[11].groupe = 3;
+    cases[11].prix = 999999999 ;
+    cases[11].proprio = "Disponible";
+
+
+    //12. Raccourci : Avancez à la case 21
+    cases[12].nomCase = "RACCOURCI";
+    cases[12].typeCase = 0;
+
+
+    //13. Propriété 1 du groupe 4
+    cases[13].nomCase = "PLACE DE LA CROIX ROUSSE";
+    cases[13].typeCase = 1;
+    cases[13].groupe = 4;
+    cases[13].prix = 999999999 ;
+    cases[13].proprio = "Disponible";
+
+
+    //14. Tirez une carte chance
+    cases[14].nomCase = "TIRAGE CARTE CHANCE";
+    cases[14].typeCase = 0;
+
+
+    //15. Propriété 2 du groupe 4
+    cases[15].nomCase = "THEATRE";
+    cases[15].typeCase = 1;
+    cases[15].groupe = 4;
+    cases[15].prix = 999999999 ;
+    cases[15].proprio = "Disponible";
+
+
+    //16. Case stationnement gratuit
+    cases[16].nomCase = "STATIONNEMENT GRATUIT";
+    cases[16].typeCase = 0;
+
+
+    //17. Propriété 1 du groupe 5
+    cases[17].nomCase = "BASILIQUE NOTRE DAME DE FOURVIERE";
+    cases[17].typeCase = 1;
+    cases[17].groupe = 5;
+    cases[17].prix = 999999999 ;
+    cases[17].proprio = "Disponible";
+
+
+    //18. Taxe sur les produits de luxe : Payez 200€
+    cases[18].nomCase = "TAXE SUR LES PRODUITS DE LUXE";
+    cases[18].typeCase = 0;
+
+
+    //19. Propriété 2 du groupe 5
+    cases[19].nomCase = "THEATRE ROMAIN";
+    cases[19].typeCase = 1;
+    cases[19].groupe = 5;
+    cases[19].prix = 999999999 ;
+    cases[19].proprio = "Disponible";
+
+
+    //20. Raccourci : Avancez à la case 29
+    cases[20].nomCase = "RACCOURCI";
+    cases[20].typeCase = 0;
+
+
+    //21. Propriété 1 du groupe 6
+    cases[21].nomCase = "BROTTEAUX";
+    cases[21].typeCase = 1;
+    cases[21].groupe = 6;
+    cases[21].prix = 999999999 ;
+    cases[21].proprio = "Disponible";
+
+
+    //22. Tirez une carte communauté
+
+
+    //23. Propriété 2 du groupe 6
+    cases[23].nomCase = "PARC DE LA TETE D'OR";
+    cases[23].typeCase = 1;
+    cases[23].groupe = 6;
+    cases[23].prix = 999999999 ;
+    cases[23].proprio = "Disponible";
+
+
+    //24. Allez en prison
+    cases[24].nomCase = "ALLER EN PRISON";   //Cheh
+    cases[24].typeCase = 0;
+
+
+
+    //25. Propriété 1 du groupe 7
+    cases[25].nomCase = "GUILLOTIERE";
+    cases[25].typeCase = 1;
+    cases[25].groupe = 7;
+    cases[25].prix = 999999999 ;
+    cases[25].proprio = "Disponible";
+
+
+    //26. Vous trouvez 50€ par terre.
+    cases[26].nomCase = "VOUS TROUVEZ 50EUROS";  //La chance....
+    cases[26].typeCase = 0;
+
+
+    //27. Propriété 2 du groupe 7
+    cases[27].nomCase = "GERLAND";
+    cases[27].typeCase = 1;
+    cases[27].groupe = 7;
+    cases[27].prix = 999999999 ;
+    cases[27].proprio = "Disponible";
+
+
+    //28. Raccourci : Avancez à la case 5 (Vous passez par la case départ et collectez 200€)
+    cases[28].nomCase = "RACCOURCI";
+    cases[28].typeCase = 0;
+
+
+    //29. Propriété 1 du groupe 8
+    cases[29].nomCase = "MANUFACTURE DES TABACS";
+    cases[29].typeCase = 1;
+    cases[29].groupe = 8;
+    cases[29].prix = 999999999 ;
+    cases[29].proprio = "Disponible";
+
+
+    //30. Tirez une carte chance
+
+
+    //31. Propriété 2 du groupe 8
+    cases[31].nomCase = "MON PLAISIR";
+    cases[31].typeCase = 1;
+    cases[31].groupe = 8;
+    cases[31].prix = 999999999 ;
+    cases[31].proprio = "Disponible";
+
+
+
+
+
+    return cases;
 }
 
 
-
 //====================================================================================================================//
-//Procédure en référence au choix 1 du menu principal.
-Joueur* nouvellePartie(int* nbJoueurs) {
-    int i=0;
+//Procédures en référence au choix 1 du menu principal.
 
+//Initialisation de la liste de joueurs ( nombre, nom, argent, position sur le plateau).
+Joueur* initJoueur(int* nbJoueurs) {
+
+    //initialisation des variables utiles.
+    int i=0;
+    int alea=0;
+    Joueur tmp;
+
+    //Entrée du nombre de joueurs ainsi que de leurs noms.
     printf("\n=====| Combien de joueur etes-vous ? |=====\n>");
     scanf("%d",nbJoueurs);
-    Joueur* listeJoueurs = (Joueur*) malloc( *nbJoueurs * sizeof(Joueur) );  // NE PAS OUBLIER DE FREE LISTEJOUEURS!!
-                                                                             // LORSQUE LA PARTIE SERA TERMINEE
+    Joueur* listeJoueurs = (Joueur*) malloc(*nbJoueurs * sizeof(Joueur) );
+
     for(i=0;i<*nbJoueurs;i++){
         listeJoueurs[i].nomJoueur = (char*) malloc(sizeof(char));
         printf("\n=| Entrez le nom du joueur %d |=\n>",i+1);
         scanf("%s", listeJoueurs[i].nomJoueur);
 
+        //initialisation de leurs porte feuille ainsi que de leurs position sur le plateau ( case 0 = départ ).
         listeJoueurs[i].money = 1500;
         listeJoueurs[i].position = 0;
         printf("Banque: Vous recevez 1500 euros de bienvenue.\n\n");
     }
-    //RESTE DU CODE
 
+    //On mélange l'ordre des joueurs dans la liste.
+    srand(time(NULL));
+    for(i=0;i<*nbJoueurs;i++){
+        alea = rand()%*nbJoueurs;
+        tmp = listeJoueurs[alea];
+        listeJoueurs[alea] = listeJoueurs[i];
+        listeJoueurs[i] = tmp;
+    }
+    printf("Vos numeros de joueurs ont ete modifies, voici le nouvel ordre de passage :\n");
+    for(i=0;i<*nbJoueurs;i++){
+        printf("Joueur %d = %s\n",i+1,listeJoueurs[i].nomJoueur);
+    } printf("\n");
 
     return listeJoueurs;
-
 }
 
 
@@ -53,7 +284,7 @@ Joueur* nouvellePartie(int* nbJoueurs) {
 void afficherNomsEquipeProjet(){
     printf("=====| Liste des membres |=====\n");
     printf("MABILLE Thomas\n"
-           "etc\n\n");
+           "ROBERT Theo\n\n");
 }
 
 

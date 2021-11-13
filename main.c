@@ -4,31 +4,40 @@
 
 
 int main() {
-    printf("==========| MONOPOLY-ECE-2021 |==========\n");
     int choix=0,i=0;
     int nbJoueurs=0;
+    int tableau[31];
     Joueur* listeJoueurs;
+    Case* cases;
 
+    printf("|=***************************************=|\n"
+           "|==========| MONOPOLY-ECE-2021 |==========|\n"
+           "|=***************************************=|\n\n");
 
     do {
-        printf("=====| Que souhaitez vous faire ? |=====\n");
-        printf("1/ Lancer une nouvelle partie.\n"
-               "2/ Sauvegarder la partie en cours.\n"
-               "3/ Charger une ancienne partie.\n"
-               "4/ Afficher les regles.\n"
-               "5/ Afficher le nom des membres de l'equipe du projet.\n"
-               "6/ Quitter.\n");
-        printf("========================================\n>");
+        menuPrincipal();
         scanf("%d",&choix);
-        char flush;
-        scanf("%c", &flush);
+        //char flush;
+        //scanf("%c", &flush);
 
 
         switch(choix) {
             case 1 :
                 //Lancer une nouvelle partie.
-                listeJoueurs = nouvellePartie(&nbJoueurs);
-                
+                printf("Lancement nouvelle partie...\n");
+
+                printf("Initialisation du plateau de jeu....\n");
+                cases = initPlateau(cases);
+
+
+
+
+                listeJoueurs = initJoueur(&nbJoueurs);
+
+
+
+
+
                 break;
 
             case 2 :
@@ -49,6 +58,7 @@ int main() {
                 break;
 
             case 6 :
+                //Quitter.
                 quitter();
                 break;
 
