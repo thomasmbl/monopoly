@@ -167,6 +167,8 @@ Case* initPlateau(Case* cases) {
 
 
     //22. Tirez une carte communauté
+    cases[22].nomCase = "TIRAGE CARTE COMMUNAUTE";
+    cases[22].typeCase = 0;
 
 
     //23. Propriété 2 du groupe 6
@@ -218,6 +220,8 @@ Case* initPlateau(Case* cases) {
 
 
     //30. Tirez une carte chance
+    cases[30].nomCase = "TIRAGE CARTE CHANCE";
+    cases[30].typeCase = 0;
 
 
     //31. Propriété 2 du groupe 8
@@ -229,14 +233,37 @@ Case* initPlateau(Case* cases) {
 
 
 
-
-
     return cases;
+}
+
+//Fonction d'affichage du "plateau" en console ainsi que les informations des joueurs dans la partie.
+void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
+    //Affichage des numeros de case du plateau ( 1 à 32 ).
+    printf("\n===================================================| Plateau de jeu |================"
+           "===================================\n\n");
+    for(int i=1;i<=32;i++){
+        printf(" CASE %d \t",i);
+        //Condition pour le retour a la ligne en console ( tableau de 4 lignes par 8 colonnes ).
+        if(i%8==0){
+            printf("\n");
+        }
+    }
+    printf("======================================================================================="
+           "=================================\n");
+
+    //Affichage de la position de chaque joueur sur le plateau ainsi que leur argent.
+    printf("\n=====| Informations des joueurs dans la partie |=====\n");
+    for(int i=0;i<*nbJoueurs;i++){
+        printf("Joueur %d : %s - %d euros - Case : %d\n"
+               "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position);
+    }
+    printf("======================================================\n\n");
+    
 }
 
 
 //====================================================================================================================//
-//Procédures en référence au choix 1 du menu principal.
+//Fonctions en référence au choix 1 du menu principal.
 
 //Initialisation de la liste de joueurs ( nombre, nom, argent, position sur le plateau).
 Joueur* initJoueur(int* nbJoueurs) {
@@ -278,6 +305,17 @@ Joueur* initJoueur(int* nbJoueurs) {
     return listeJoueurs;
 }
 
+/*
+void nouvellePartie(int* nbJoueurs, Case* cases){
+    int tour = 1;
+    do {
+
+
+
+    }while();
+
+}
+*/
 
 //====================================================================================================================//
 //Procédure en référence au choix 5 du menu principal.

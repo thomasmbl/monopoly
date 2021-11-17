@@ -30,18 +30,18 @@ typedef struct{
 } Joueur;
 
 
-
-
-
-
-
-
 void menuPrincipal();
 
 
 
 Case* initPlateau(Case* cases);
 Joueur* initJoueur(int* nbJoueurs);
+void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
+
+
+void nouvellePartie(int* nbJoueurs, Case* cases);
+
+
 
 
 

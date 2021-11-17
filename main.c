@@ -6,7 +6,6 @@
 int main() {
     int choix=0,i=0;
     int nbJoueurs=0;
-    int tableau[31];
     Joueur* listeJoueurs;
     Case* cases;
 
@@ -24,15 +23,19 @@ int main() {
         switch(choix) {
             case 1 :
                 //Lancer une nouvelle partie.
+
                 printf("Lancement nouvelle partie...\n");
 
+                //Initialisation du plateau de jeu.
                 printf("Initialisation du plateau de jeu....\n");
                 cases = initPlateau(cases);
 
-
-
-
+                //Initialisation des joueurs.
                 listeJoueurs = initJoueur(&nbJoueurs);
+
+                affichagePlateau(listeJoueurs,&nbJoueurs); //ct un test
+
+
 
 
 
@@ -63,7 +66,7 @@ int main() {
                 break;
 
             default : {
-                printf("Choix invalide !\n>");
+                printf("Choix invalide !\n\n");
                 break;
             }
         }
