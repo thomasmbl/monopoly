@@ -19,6 +19,65 @@ void menuPrincipal() {
     printf("==========================================================\n>");
 }
 
+int menuJoueur(){
+    int choix=0;
+    printf("\n=====| Menu Joueur |=====\n"
+           "que souhaitez vous faire ?\n"
+           "1/ Lancer les des\n"
+           "2/ \n"
+           "3/ \n"
+           "4/ \n"
+           "5/ \n"
+           "6/Passer son tour.\n"
+           "=========================\n>");
+    scanf("%d",&choix);
+    return choix;
+}
+
+int lancerLesDes(){
+    int de1 = 0, de2 = 0, somme=0, nbDoubles = 0;
+    do{
+        printf("Lancement des des ! \n");
+        //Affectation de valeurs aléatoires pour nos 2 dés.
+        de1 = rand()%6+1;
+        de2 = rand()%6+1;
+
+        somme += de1 + de2;
+
+        printf("de1 = %d , de2 = %d , somme = %d\n", de1, de2, somme);
+
+        if(de1 != de2){
+            printf("Vous avancez de %d cases\n",somme);
+            return somme;
+        }
+        else if(de1==de2){
+            printf("Vous avez fait un DOUBLE!\n");
+            nbDoubles += 1;
+        }
+    }while( (de1==de2) && nbDoubles < 3 );
+
+    if( nbDoubles == 3 ){
+        printf("3 DOUBLES D'AFFILE !!!\n"
+               "Trop de chance finit par porter mal chance ! Aller directement en prison :c\n");
+        return 8; // 8 = CASE PRISON
+    }
+
+}
+
+int nouvellePosition(int actuelle, int sommeDes){
+    int nouvelle = 0;
+    nouvelle = actuelle + sommeDes;
+
+    if(nouvelle == 32){                //position = 32 equivaut a la case depart donc 0
+        nouvelle = 0;
+        return nouvelle;
+    }
+    else if(nouvelle > 32){
+        nouvelle = nouvelle - 32;
+        return nouvelle;
+    }
+}
+
 //====================================================================================================================//
 Case* initPlateau(Case* cases) {
     cases = malloc(32*sizeof(Case));
@@ -258,7 +317,7 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
                "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position);
     }
     printf("======================================================\n\n");
-    
+
 }
 
 
@@ -305,17 +364,59 @@ Joueur* initJoueur(int* nbJoueurs) {
     return listeJoueurs;
 }
 
-/*
-void nouvellePartie(int* nbJoueurs, Case* cases){
-    int tour = 1;
+
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
+    int tour = 0, choix = 0;
     do {
-
-
-
-    }while();
-
+        tour += 1;
+        printf("==============================| Tour %d |==============================\n", tour);
+        affichagePlateau(listeJoueurs,nbJoueurs);
+        for (int i = 0; i < *nbJoueurs; i++) {
+            int lanceDe = 0;
+            printf("> C'est a %s de joueur !\n", listeJoueurs[i].nomJoueur);
+            do {
+                switch (menuJoueur()) {
+                    case 1 :
+                        //Lancer les dés. (Appel de la fonction lancerLesDes 1 fois par personne par tour).
+                        if(lanceDe == 1){
+                            printf("Vous avez deja lancé les des!\n");
+                            break;
+                        }
+                        //On modifie la position des joueurs.
+                        listeJoueurs[i].position = nouvellePosition( listeJoueurs[i].position, lancerLesDes() );
+                        lanceDe = 1;
+                        break;
+                    case 2 :
+                        //
+                    default :
+                        printf("Choix invalide!\n");
+                        break;
+                }
+            }while (menuJoueur() != 6);
+        }
+    }while (*nbJoueurs != 0);
 }
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //====================================================================================================================//
 //Procédure en référence au choix 5 du menu principal.

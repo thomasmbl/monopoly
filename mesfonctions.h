@@ -23,14 +23,14 @@ typedef struct{
 typedef struct{
     char* nomJoueur;        //Nom du Joueur.
     int money;              //Argent que le joueur possède au cours de la partie. ( valeur toujours positive )
-    int position;           //position du joueur sur le plateau (case 1 à 32).
-    int de1;                //Valeur du dé 1 au dernier lancé.
-    int de2;                //Valeur du dé 2 au dernier lancé.
-    int SerieDouble;        //Compte les séries de double.
+    int position;           //position du joueur sur le plateau (0 à 31).
 } Joueur;
 
 
 void menuPrincipal();
+int menuJoueur();
+
+int lancerLesDes();
 
 
 
@@ -39,7 +39,7 @@ Joueur* initJoueur(int* nbJoueurs);
 void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
 
 
-void nouvellePartie(int* nbJoueurs, Case* cases);
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases);
 
 
 

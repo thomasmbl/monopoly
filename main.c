@@ -33,7 +33,9 @@ int main() {
                 //Initialisation des joueurs.
                 listeJoueurs = initJoueur(&nbJoueurs);
 
-                affichagePlateau(listeJoueurs,&nbJoueurs); //ct un test
+                nouvellePartie(&nbJoueurs,listeJoueurs,cases);
+
+                //affichagePlateau(listeJoueurs,&nbJoueurs); //ct un test
 
 
 
