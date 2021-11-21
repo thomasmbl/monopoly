@@ -7,37 +7,53 @@
 #ifndef PROJET_MONOPOLY_MESFONCTIONS_H
 #define PROJET_MONOPOLY_MESFONCTIONS_H
 
-//Structure CASE, renseigne les informations de la propriétée ciblée.
+//Structure CASE, renseigne les informations de la propriété ciblée.
 typedef struct{
     char* nomCase;          //Nom de la case.
-    int typeCase;           //1 si case propriete / 2 case carte communauté / 3 carte chance / 0 sinon
+    int typeCase;           //1 si case propriété / 2 case carte communauté / 3 carte chance / 0 sinon
 
 
-    int groupe;             //Groupe auquelle elle appartient (1 à 8).
-    int prix;               //Prix de la propriétée.
-    char* proprio;          //Nom du joueur qui possèderait cette propriétée.
+    int groupe;             //Groupe auquel elle appartient (1 à 8).
+    int prix;               //Prix de la propriété.
+    char* proprio;          //Nom du joueur qui possèderait cette propriété.
 } Case;
-
-
 
 //Structure Joueur, renseigne les informations du joueur ciblé.
 typedef struct{
     char* nomJoueur;        //Nom du Joueur.
-    int money;              //Argent que le joueur possède au cours de la partie. ( valeur toujours positive )
-    int position;           //position du joueur sur le plateau (0 à 31).
+    int money;              //Argent que le joueur possède au cours de la partie. (valeur toujours positive)
+    int position;           //position du joueur sur le plateau (1 à 32).
     int prison;             //1 VRAI 0 FAUX.
     int tourEnPrison;       //Max 3 tours en prison. Après il est libéré.
+    int nbCSP;              //nombre de cartes sortie de prison que le joueur possède 0,1 ou 2.
 } Joueur;
+
+//Structure des cartes chance.
+typedef struct{
+    char* nom;            //nom de la carte chance.
+    int taille;           //10 ou 9 si la carte sortie de prison a été pioché, mais pas joué.
+    struct CChance* suivant;   //
+}CChance;
+
+//Structure des cartes communauté.
+typedef struct{
+    char* nom;            //nom de la carte communauté.
+}CCommunaute;
+
 
 
 void menuPrincipal();
 int menuJoueur();
 
 int lancerLesDes();
+int nouvellePosition(int actuelle, int sommeDes);
 
 
 
 Case* initPlateau(Case* cases);
+CChance* initCarteChance(CChance* listeCartesChance);
+CCommunaute* initCarteCommunaute(CCommunaute* listeCartesComm);
+
 Joueur* initJoueur(int* nbJoueurs);
 void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
 

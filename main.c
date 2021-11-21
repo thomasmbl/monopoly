@@ -8,6 +8,8 @@ int main() {
     int nbJoueurs=0;
     Joueur* listeJoueurs;
     Case* cases;
+    CChances* listeCartesChance;
+    CCommunaute* listeCartesComm;
 
     printf("|=*************************************************************=|\n"
            "|=====================| MONOPOLY-ECE-2021 |=====================|\n"
@@ -30,18 +32,15 @@ int main() {
                 printf("Initialisation du plateau de jeu....\n");
                 cases = initPlateau(cases);
 
+                //Initialisation des piles de cartes chance et communauté.
+                listeCartesChance = initCarteChance(listeCartesChance);
+                listeCartesComm = initCarteCommunaute(listeCartesComm);
+
                 //Initialisation des joueurs.
                 listeJoueurs = initJoueur(&nbJoueurs);
 
+                //Lancement de la nouvelle partie.
                 nouvellePartie(&nbJoueurs,listeJoueurs,cases);
-
-                //affichagePlateau(listeJoueurs,&nbJoueurs); //ct un test
-
-
-
-
-
-
 
                 break;
 
@@ -51,6 +50,7 @@ int main() {
 
             case 3 :
                 //Charger une ancienne partie.
+                //                       Faire passer la variable tour en paramètre via un pointeur.
                 break;
 
             case 4 :

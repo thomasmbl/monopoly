@@ -296,6 +296,75 @@ Case* initPlateau(Case* cases) {
     return cases;
 }
 
+//Fonction d'initialisation des 10 cartes chance.
+CChance* initCarteChance(CChance* listeCartesChance){
+    int alea = 0;
+    CChance tmp;
+
+    //On initialise la liste des cartes chance.
+    listeCartesChance[0].nom = "Allez à la case de départ. (Collectez 200€)";
+    listeCartesChance[1].nom = "Allez à PLACE DES TERREAUX. Collectez votre salaire si vous passez la case départ";
+    listeCartesChance[2].nom = "Allez à GUILLOTIERE. Collectez votre salaire si vous passez la case départ";
+    listeCartesChance[3].nom = "La banque vous paie 50€";
+    listeCartesChance[4].nom = "Carte sortez de prison";
+    listeCartesChance[5].nom = "Reculez de 3 cases";
+    listeCartesChance[6].nom = "Allez directement en prison, vous ne passez pas par la case départ";
+    listeCartesChance[7].nom = "Vous faites des réparations sur vos propriétés : Payez 25€/maison et 100€/hôtel.";
+    listeCartesChance[8].nom = "Vous avez été élu maire, payez 50€ à chaque joueur";
+    listeCartesChance[9].nom = "Excès de vitesse : payez 100€";
+
+    //On mélange la pile de carte.
+    srand(time(NULL));
+    for(int i=0;i<10;i++){
+        alea = rand()%10;
+        tmp = listeCartesChance[alea];
+        listeCartesChance[alea] = listeCartesChance[i];
+        listeCartesChance[i] = tmp;
+    }
+    return listeCartesChance;
+}
+
+CChance* tirerCarteC(CChance* listeCartesChance){
+    CChance tmp;
+    printf("Vous avez tirez la carte :\n"
+           "\t==> %s",listeCartesChance[0].nom);
+    if(strcmp(listeCartesChance[0].nom,"Carte sortez de prison")==0){
+        CChance* suppCarte;
+        
+
+
+        return 1;
+    }
+}
+
+//Fonction d'initialisation des 10 cartes communauté.
+CCommunaute* initCarteCommunaute(CCommunaute* listeCartesComm){
+    int alea = 0;
+    CCommunaute tmp;
+
+    //On initialise la liste des cartes communauté.
+    listeCartesComm[0].nom = "Allez à la case départ. (Collectez 200€)";
+    listeCartesComm[1].nom = "Frais de docteur. Payez 50€";
+    listeCartesComm[2].nom = "Carte sortie de prison";
+    listeCartesComm[3].nom = "Allez directement en prison, vous ne collectez pas votre salaire";
+    listeCartesComm[4].nom = "Vous faites un vide grenier et gagnez 30€";
+    listeCartesComm[5].nom = "C’est votre anniversaire, collectez 10€ de chaque joueur";
+    listeCartesComm[6].nom = "Vous récupérez des rentes : gagnez 100€";
+    listeCartesComm[7].nom = "Payez des frais d’hôpital de 100€";
+    listeCartesComm[8].nom = "Vous avez obtenu la seconde place d’un concours de beauté : gagnez 10€";
+    listeCartesComm[9].nom = "Vous héritez de 100€";
+
+    //On mélange la pile de carte.
+    srand(time(NULL));
+    for(int i=0;i<10;i++){
+        alea = rand()%10;
+        tmp = listeCartesComm[alea];
+        listeCartesComm[alea] = listeCartesComm[i];
+        listeCartesComm[i] = tmp;
+    }
+    return listeCartesComm;
+}
+
 //Fonction d'affichage du "plateau" en console ainsi que les informations des joueurs dans la partie.
 void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
     //Affichage des numeros de case du plateau ( 1 à 32 ).
@@ -321,11 +390,10 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
 
 }
 
-
 //====================================================================================================================//
 //Fonctions en référence au choix 1 du menu principal.
 
-//Initialisation de la liste de joueurs ( nombre, nom, argent, position sur le plateau).
+//Initialisation de la liste de joueurs ( nombre, nom, argent, position sur le plateau ).
 Joueur* initJoueur(int* nbJoueurs) {
 
     //initialisation des variables utiles.
@@ -395,7 +463,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                     case 1 :
                         //Lancer les dés. (Appel de la fonction lancerLesDes 1 fois par personne par tour).
 
-                        //On verif si le joueur n'est pas en prison.
+                        //On vérif si le joueur n'est pas en prison.
                         //Si c'est le cas alors il n'a le droit qu'a un seul lancé par tour, même si c'est un double.
                         if(listeJoueurs[i].prison == 1){
 
@@ -410,7 +478,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                                 lanceDeDes = 1;
 
                                 if(de1==de2) {
-                                    printf("Dés : %d et %d"
+                                    printf("Dés : %d et %d\n"
                                            "Bravo vous etes libre !\n"
                                            "Vous avancez de %d cases.\n",2*de1);
                                     listeJoueurs[i].prison = 0;
@@ -432,7 +500,8 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                                 lanceDeDes = 1;
 
                                 if(de1==de2) {
-                                    printf("Bravo vous etes libre !\n"
+                                    printf("Dés : %d et %d\n"
+                                           "Bravo vous etes libre !\n"
                                            "Vous avancez de %d cases.\n",2*de1);
                                     listeJoueurs[i].prison = 0;
                                     listeJoueurs[i].tourEnPrison = 0;
@@ -442,7 +511,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                                 }
                                 else{
                                     printf("Vous n'avez pas fait de double, payez 50 euros pour votre liberation\n");
-                                    listeJoueurs[i].money -= 50;
+                                    listeJoueurs[i].money -= 50;      //Verifier si le joueur a assez d'argent..
                                     listeJoueurs[i].prison = 0;
                                     listeJoueurs[i].tourEnPrison = 0;
                                     listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);
@@ -460,7 +529,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                             break;
                         }
 
-                        //Si il n'a pas déjà lancé alors il peut les lancer.
+                        //S'il n'a pas déjà lancé alors il peut les lancer.
                         //On modifie la position des joueurs.
                         position = listeJoueurs[i].position;
                         sommeDes = lancerLesDes();
@@ -473,8 +542,8 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                         lanceDeDes = 1;
 
 
-                        //Differentes actions en fonction de la case sur laquelle se trouve le joueur ================//
-                        //On ajoute 200 euros au joueur si il est/ou passe par la case depart.
+                        //Différentes actions en fonction de la case sur laquelle se trouve le joueur ================//
+                        //On ajoute 200 euros au joueur s'il est/ou passe par la case depart.
                         if( listeJoueurs[i].position == 1 || position+sommeDes >= 32 ){
                             printf("\nBanque: Passage par la case depart, vous recevez 200 euros!\n");
                             listeJoueurs[i].money += 200;
@@ -482,7 +551,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
 
                         printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
 
-                        //Si le joueur se trouve sur une propriete, on affiche les informations utiles.
+                        //Si le joueur se trouve sur une propriété, on affiche les informations utiles.
                         if(cases[listeJoueurs[i].position-1].typeCase == 1){
                             printf("==> Vous vous trouvez sur une case PROPRIETE\n"
                                    "\tStatus : %s\n"
@@ -495,7 +564,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
                         //Cases tirage carte communauté.
                         else if(cases[listeJoueurs[i].position-1].typeCase == 2){
                             printf("Tirage carte communaute\n");
-                            //Faire fonction sur les tirages de carte communaute.
+                            //Faire fonction sur les tirages de carte communauté.
                         }
                         //Cases tirage carte chance.
                         else if(cases[listeJoueurs[i].position-1].typeCase == 3){
@@ -505,7 +574,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
 
                         else if(listeJoueurs[i].position == 3){
                             printf("Banque: taxe d'habitation, payez 100euros !\n");
-                            listeJoueurs[i].money -= 100;
+                            listeJoueurs[i].money -= 100;         //Verifier si le joueur a assez d'argent..
                         }
 
                         else if(listeJoueurs[i].position == 5){
@@ -519,7 +588,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
 
                         else if(listeJoueurs[i].position == 11){
                             printf("Banque: Impot sur la fortune, payez 100euros !\n");
-                            listeJoueurs[i].money -= 100;
+                            listeJoueurs[i].money -= 100;        //Verifier si le joueur a assez d'argent..
                         }
 
                         else if(listeJoueurs[i].position == 13){
@@ -529,7 +598,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
 
                         else if(listeJoueurs[i].position == 19){
                             printf("Banque: Taxe sur les produits de luxe, payez 200euros !\n"),
-                                    listeJoueurs[i].money -= 200;
+                                    listeJoueurs[i].money -= 200;    //Verifier si le joueur a assez d'argent..
                         }
 
                         else if(listeJoueurs[i].position == 21){
