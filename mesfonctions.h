@@ -10,7 +10,8 @@
 //Structure CASE, renseigne les informations de la propriétée ciblée.
 typedef struct{
     char* nomCase;          //Nom de la case.
-    int typeCase;           // 1 si case propriete 0 sinon.
+    int typeCase;           //1 si case propriete / 2 case carte communauté / 3 carte chance / 0 sinon
+
 
     int groupe;             //Groupe auquelle elle appartient (1 à 8).
     int prix;               //Prix de la propriétée.
@@ -24,6 +25,8 @@ typedef struct{
     char* nomJoueur;        //Nom du Joueur.
     int money;              //Argent que le joueur possède au cours de la partie. ( valeur toujours positive )
     int position;           //position du joueur sur le plateau (0 à 31).
+    int prison;             //1 VRAI 0 FAUX.
+    int tourEnPrison;       //Max 3 tours en prison. Après il est libéré.
 } Joueur;
 
 

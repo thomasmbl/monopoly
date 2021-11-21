@@ -9,14 +9,14 @@
 
 //====================================================================================================================//
 void menuPrincipal() {
-    printf("=====| Que souhaitez vous faire ? |=======================\n");
-    printf("1/ Lancer une nouvelle partie.\n"
-           "2/ Sauvegarder la partie en cours.\n"
-           "3/ Charger une ancienne partie.\n"
-           "4/ Afficher les regles.\n"
-           "5/ Afficher le nom des membres de l'equipe du projet.\n"
-           "6/ Quitter.\n");
-    printf("==========================================================\n>");
+    printf("=====| Que souhaitez vous faire ? |=======================|\n");
+    printf("1/ Lancer une nouvelle partie.                            |\n"
+           "2/ Sauvegarder la partie en cours.                        |\n"
+           "3/ Charger une ancienne partie.                           |\n"
+           "4/ Afficher les regles.                                   |\n"
+           "5/ Afficher le nom des membres de l'equipe du projet.     |\n"
+           "6/ Quitter.                                               |\n");
+    printf("==========================================================|\n>");
 }
 
 int menuJoueur(){
@@ -37,14 +37,14 @@ int menuJoueur(){
 int lancerLesDes(){
     int de1 = 0, de2 = 0, somme=0, nbDoubles = 0;
     do{
-        printf("Lancement des des ! \n");
-        //Affectation de valeurs aléatoires pour nos 2 dés.
+        printf("\nLancement des des ! \n");
+        //Affectation de valeurs aléatoires pour nos 2 dés (1 à 6).
         de1 = rand()%6+1;
         de2 = rand()%6+1;
 
         somme += de1 + de2;
 
-        printf("de1 = %d , de2 = %d , somme = %d\n", de1, de2, somme);
+        printf("> de1 = %d , de2 = %d , somme = %d\n", de1, de2, somme);
 
         if(de1 != de2){
             printf("Vous avancez de %d cases\n",somme);
@@ -54,12 +54,12 @@ int lancerLesDes(){
             printf("Vous avez fait un DOUBLE!\n");
             nbDoubles += 1;
         }
-    }while( (de1==de2) && nbDoubles < 3 );
+    }while( (de1==de2) && nbDoubles < 3 );     //Conditions pour relancer les dés, max 3 lancés.
 
-    if( nbDoubles == 3 ){
+    if( nbDoubles == 3 ){                      //Si 3 doubles alors le joueur va en prison.
         printf("3 DOUBLES D'AFFILE !!!\n"
                "Trop de chance finit par porter mal chance ! Aller directement en prison :c\n");
-        return 8; // 8 = CASE PRISON
+        return 0;
     }
 
 }
@@ -68,8 +68,8 @@ int nouvellePosition(int actuelle, int sommeDes){
     int nouvelle = 0;
     nouvelle = actuelle + sommeDes;
 
-    if(nouvelle == 32){                //position = 32 equivaut a la case depart donc 0
-        nouvelle = 0;
+    if(nouvelle == 32){                //position = 32 équivaut à la case départ donc 0
+        nouvelle = 1;
         return nouvelle;
     }
     else if(nouvelle > 32){
@@ -79,6 +79,7 @@ int nouvellePosition(int actuelle, int sommeDes){
 }
 
 //====================================================================================================================//
+//Fonction d'initialisation des 32 cases du plateau.
 Case* initPlateau(Case* cases) {
     cases = malloc(32*sizeof(Case));
 
@@ -239,7 +240,7 @@ Case* initPlateau(Case* cases) {
 
 
     //24. Allez en prison
-    cases[24].nomCase = "ALLER EN PRISON";   //Cheh
+    cases[24].nomCase = "ALLER EN PRISON";
     cases[24].typeCase = 0;
 
 
@@ -253,7 +254,7 @@ Case* initPlateau(Case* cases) {
 
 
     //26. Vous trouvez 50€ par terre.
-    cases[26].nomCase = "VOUS TROUVEZ 50EUROS";  //La chance....
+    cases[26].nomCase = "VOUS TROUVEZ 50EUROS";
     cases[26].typeCase = 0;
 
 
@@ -311,7 +312,7 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
            "=================================\n");
 
     //Affichage de la position de chaque joueur sur le plateau ainsi que leur argent.
-    printf("\n=====| Informations des joueurs dans la partie |=====\n");
+    printf("\n=====| Informations des joueurs dans la partie |======\n");
     for(int i=0;i<*nbJoueurs;i++){
         printf("Joueur %d : %s - %d euros - Case : %d\n"
                "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position);
@@ -339,13 +340,13 @@ Joueur* initJoueur(int* nbJoueurs) {
 
     for(i=0;i<*nbJoueurs;i++){
         listeJoueurs[i].nomJoueur = (char*) malloc(sizeof(char));
-        printf("\n=| Entrez le nom du joueur %d |=\n>",i+1);
+        printf("\nEntrez le nom du joueur %d :",i+1);
         scanf("%s", listeJoueurs[i].nomJoueur);
 
         //initialisation de leurs porte feuille ainsi que de leurs position sur le plateau ( case 0 = départ ).
         listeJoueurs[i].money = 1500;
-        listeJoueurs[i].position = 0;
-        printf("Banque: Vous recevez 1500 euros de bienvenue.\n\n");
+        listeJoueurs[i].position = 1;
+        printf("Banque: Vous recevez 1500 euros de bienvenue.\n");
     }
 
     //On mélange l'ordre des joueurs dans la liste.
@@ -356,7 +357,7 @@ Joueur* initJoueur(int* nbJoueurs) {
         listeJoueurs[alea] = listeJoueurs[i];
         listeJoueurs[i] = tmp;
     }
-    printf("Vos numeros de joueurs ont ete modifies, voici le nouvel ordre de passage :\n");
+    printf("\nVos numeros de joueurs ont ete modifies, voici le nouvel ordre de passage :\n");
     for(i=0;i<*nbJoueurs;i++){
         printf("Joueur %d = %s\n",i+1,listeJoueurs[i].nomJoueur);
     } printf("\n");
@@ -369,30 +370,204 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases) {
     int tour = 0, choix = 0;
     do {
         tour += 1;
-        printf("==============================| Tour %d |==============================\n", tour);
+        printf("=======================================================| Tour %d |=======================================================", tour);
         affichagePlateau(listeJoueurs,nbJoueurs);
         for (int i = 0; i < *nbJoueurs; i++) {
-            int lanceDe = 0;
-            printf("> C'est a %s de joueur !\n", listeJoueurs[i].nomJoueur);
+            //Initialisation des variables a chaque tour de chaque joueurs.
+            int lanceDeDes = 0;
+            int position = 0, sommeDes = 0;
+
+            printf("> ********************* C'est a %s de joueur ! *********************\n", listeJoueurs[i].nomJoueur);
             do {
-                switch (menuJoueur()) {
+                //Si le joueur est en prison, on affiche les options qui lui sont possible pour en sortir.
+                if(listeJoueurs[i].prison == 1){
+                    printf("Vous etes en prison ! Pour vous en echapper :\n"
+                           "\t1/Faire un double sur l'un de vos %d prochains tours.\n"
+                           "\t2/Utiliser la carte : sortie de prison gratuite.\n"
+                           "\t3/Acheter la carte : sortie de prison gratuite a un autre joueur et la jouer\n"
+                           "\t4/Payer une amande de 50euros avant de lancer les des lors d'un de vos 2 prochains tours\n"
+                           "\t5/Si vous ne parvenez pas a faire un double a votre 3eme tour (tour restant : %d), vous payez 50euros\n"
+                           ,listeJoueurs[i].tourEnPrison,listeJoueurs[i].tourEnPrison);
+                }
+
+                choix = menuJoueur();
+                switch ( choix ) {
                     case 1 :
                         //Lancer les dés. (Appel de la fonction lancerLesDes 1 fois par personne par tour).
-                        if(lanceDe == 1){
-                            printf("Vous avez deja lancé les des!\n");
+
+                        //On verif si le joueur n'est pas en prison.
+                        //Si c'est le cas alors il n'a le droit qu'a un seul lancé par tour, même si c'est un double.
+                        if(listeJoueurs[i].prison == 1){
+
+                            if(lanceDeDes == 1){
+                                printf("Vous avez deja lance les des!\n");
+                                break;
+                            }
+
+                            if(listeJoueurs[i].tourEnPrison != 1){
+                                int de1 = rand()%6 +1;
+                                int de2 = rand()%6 +1;
+                                lanceDeDes = 1;
+
+                                if(de1==de2) {
+                                    printf("Dés : %d et %d"
+                                           "Bravo vous etes libre !\n"
+                                           "Vous avancez de %d cases.\n",2*de1);
+                                    listeJoueurs[i].prison = 0;
+                                    listeJoueurs[i].tourEnPrison = 0;
+                                    listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);
+                                    printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
+                                    break;
+                                }
+                                else{
+                                    printf("Vous n'avez pas fait de double, dommage reessayez au tour prochain\n");
+                                    listeJoueurs[i].tourEnPrison -= 1;
+                                    break;
+                                }
+                            }
+
+                            else if(listeJoueurs[i].tourEnPrison == 1){
+                                int de1 = rand()%6 +1;
+                                int de2 = rand()%6 +1;
+                                lanceDeDes = 1;
+
+                                if(de1==de2) {
+                                    printf("Bravo vous etes libre !\n"
+                                           "Vous avancez de %d cases.\n",2*de1);
+                                    listeJoueurs[i].prison = 0;
+                                    listeJoueurs[i].tourEnPrison = 0;
+                                    listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);
+                                    printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
+                                    break;
+                                }
+                                else{
+                                    printf("Vous n'avez pas fait de double, payez 50 euros pour votre liberation\n");
+                                    listeJoueurs[i].money -= 50;
+                                    listeJoueurs[i].prison = 0;
+                                    listeJoueurs[i].tourEnPrison = 0;
+                                    listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);
+                                    printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
+                                    break;
+                                }
+
+                            }
+
+                        }
+
+                        //Donc on vérifie si le joueur (hors cas de prison) n'a pas déjà lancé les dés.
+                        if(lanceDeDes == 1){
+                            printf("Vous avez deja lance les des!\n");
                             break;
                         }
+
+                        //Si il n'a pas déjà lancé alors il peut les lancer.
                         //On modifie la position des joueurs.
-                        listeJoueurs[i].position = nouvellePosition( listeJoueurs[i].position, lancerLesDes() );
-                        lanceDe = 1;
+                        position = listeJoueurs[i].position;
+                        sommeDes = lancerLesDes();
+                        if(sommeDes == 0){
+                            listeJoueurs[i].prison = 1;
+                            listeJoueurs[i].tourEnPrison = 3;   //Il a au plus encore 3 tours à faire en prison.
+                            break;
+                        }
+                        listeJoueurs[i].position = nouvellePosition( listeJoueurs[i].position, sommeDes );
+                        lanceDeDes = 1;
+
+
+                        //Differentes actions en fonction de la case sur laquelle se trouve le joueur ================//
+                        //On ajoute 200 euros au joueur si il est/ou passe par la case depart.
+                        if( listeJoueurs[i].position == 1 || position+sommeDes >= 32 ){
+                            printf("\nBanque: Passage par la case depart, vous recevez 200 euros!\n");
+                            listeJoueurs[i].money += 200;
+                        }
+
+                        printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
+
+                        //Si le joueur se trouve sur une propriete, on affiche les informations utiles.
+                        if(cases[listeJoueurs[i].position-1].typeCase == 1){
+                            printf("==> Vous vous trouvez sur une case PROPRIETE\n"
+                                   "\tStatus : %s\n"
+                                   "\tPrix d'achat : %d\n"
+                                   "\tGroupe : %d\n"
+                                   ,cases[listeJoueurs[i].position-1].proprio
+                                   ,cases[listeJoueurs[i].position-1].prix
+                                   ,cases[listeJoueurs[i].position-1].groupe);
+                        }
+                        //Cases tirage carte communauté.
+                        else if(cases[listeJoueurs[i].position-1].typeCase == 2){
+                            printf("Tirage carte communaute\n");
+                            //Faire fonction sur les tirages de carte communaute.
+                        }
+                        //Cases tirage carte chance.
+                        else if(cases[listeJoueurs[i].position-1].typeCase == 3){
+                            printf("Tirage carte carte\n");
+                            //Faire fonction sur les tirages de carte chance.
+                        }
+
+                        else if(listeJoueurs[i].position == 3){
+                            printf("Banque: taxe d'habitation, payez 100euros !\n");
+                            listeJoueurs[i].money -= 100;
+                        }
+
+                        else if(listeJoueurs[i].position == 5){
+                            printf("Raccourci: Hop direct a la case 13 !\n");
+                            listeJoueurs[i].position = 13;
+                        }
+
+                        else if(listeJoueurs[i].position == 9){
+                            printf("Vous etes en visite en Prison, ne craignez rien...\n");
+                        }
+
+                        else if(listeJoueurs[i].position == 11){
+                            printf("Banque: Impot sur la fortune, payez 100euros !\n");
+                            listeJoueurs[i].money -= 100;
+                        }
+
+                        else if(listeJoueurs[i].position == 13){
+                            printf("Raccourci: Hop direct a la case 21 !\n");
+                            listeJoueurs[i].position = 21;
+                        }
+
+                        else if(listeJoueurs[i].position == 19){
+                            printf("Banque: Taxe sur les produits de luxe, payez 200euros !\n"),
+                                    listeJoueurs[i].money -= 200;
+                        }
+
+                        else if(listeJoueurs[i].position == 21){
+                            printf("Raccourci: Hop direct a la case 29 !\n");
+                            listeJoueurs[i].position = 29;
+                        }
+
+                        else if(listeJoueurs[i].position == 25){
+                            printf("Raccourci PRISON HAHA: Hop direct a la case 9 ( sans argent :c )\n");
+                            listeJoueurs[i].position = 9;
+                            listeJoueurs[i].prison = 1;
+                            listeJoueurs[i].tourEnPrison = 3;
+                        }
+
+                        else if(listeJoueurs[i].position == 27){
+                            printf("La chance..vous trouvez 50euros par terre !\n");
+                            listeJoueurs[i].money += 50;
+                        }
+
+                        else if(listeJoueurs[i].position == 29){
+                            printf("Raccourci: Hop direct a la case 5 !\n");
+                            printf("Banque: Passage par la case depart, vous recevez 200 euros!\n");
+                            listeJoueurs[i].position = 5;
+                            listeJoueurs[i].money += 200;
+                        }
+
                         break;
                     case 2 :
+                        break;
                         //
+                    case 6 :
+                        //Passer son tour.
+                        break;
                     default :
                         printf("Choix invalide!\n");
                         break;
                 }
-            }while (menuJoueur() != 6);
+            }while (choix != 6);
         }
     }while (*nbJoueurs != 0);
 }
