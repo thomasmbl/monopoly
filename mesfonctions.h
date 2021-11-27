@@ -1,11 +1,9 @@
 //
-// Created by Thomas on 02/11/2021.
+// Created by thoma on 24/11/2021.
 //
 
-#include <stdio.h>
-
-#ifndef PROJET_MONOPOLY_MESFONCTIONS_H
-#define PROJET_MONOPOLY_MESFONCTIONS_H
+#ifndef MONOPOLY_MESFONCTIONS_H
+#define MONOPOLY_MESFONCTIONS_H
 
 //Structure CASE, renseigne les informations de la propriété ciblée.
 typedef struct{
@@ -32,7 +30,6 @@ typedef struct{
 typedef struct{
     char* nom;            //nom de la carte chance.
     int taille;           //10 ou 9 si la carte sortie de prison a été pioché, mais pas joué.
-    struct CChance* suivant;   //
 }CChance;
 
 //Structure des cartes communauté.
@@ -58,7 +55,7 @@ Joueur* initJoueur(int* nbJoueurs);
 void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
 
 
-void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases);
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, CChance* listeCartesChance, CCommunaute* listeCartesComm,int* nbCarteC,int* nbCarteComm);
 
 
 
@@ -73,8 +70,4 @@ void afficherNomsEquipeProjet();
 void quitter();
 
 
-
-
-#endif //PROJET_MONOPOLY_MESFONCTIONS_H
-
-
+#endif //MONOPOLY_MESFONCTIONS_H
