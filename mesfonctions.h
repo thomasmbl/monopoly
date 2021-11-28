@@ -1,9 +1,12 @@
 //
-// Created by thoma on 24/11/2021.
+// Created by Thomas on 02/11/2021.
 //
 
-#ifndef MONOPOLY_MESFONCTIONS_H
-#define MONOPOLY_MESFONCTIONS_H
+#include <stdio.h>
+#include <stdbool.h>
+
+#ifndef PROJET_MONOPOLY_MESFONCTIONS_H
+#define PROJET_MONOPOLY_MESFONCTIONS_H
 
 //Structure CASE, renseigne les informations de la propriété ciblée.
 typedef struct{
@@ -14,6 +17,14 @@ typedef struct{
     int groupe;             //Groupe auquel elle appartient (1 à 8).
     int prix;               //Prix de la propriété.
     char* proprio;          //Nom du joueur qui possèderait cette propriété.
+    int loyerMaisons[4];    //Loyer en fonction du nb de maison sur la propriete
+    int nbMaisons;          //nbMaisons acheté sur la propriete. 0 à 4
+
+    int loyerHotel;         //Loyer hotel
+    int nbHotel;            //nbHotel acheté sur la propriete. 0 ou 1
+
+    bool hypotheque;        //true / false
+
 } Case;
 
 //Structure Joueur, renseigne les informations du joueur ciblé.
@@ -24,18 +35,15 @@ typedef struct{
     int prison;             //1 VRAI 0 FAUX.
     int tourEnPrison;       //Max 3 tours en prison. Après il est libéré.
     int nbCSP;              //nombre de cartes sortie de prison que le joueur possède 0,1 ou 2.
+    int maisons;            //Nombre de maison du joueur
+    int hotel;              //Nombre d'hotel du joueur
 } Joueur;
 
-//Structure des cartes chance.
+//Structure Banque.
 typedef struct{
-    char* nom;            //nom de la carte chance.
-    int taille;           //10 ou 9 si la carte sortie de prison a été pioché, mais pas joué.
-}CChance;
-
-//Structure des cartes communauté.
-typedef struct{
-    char* nom;            //nom de la carte communauté.
-}CCommunaute;
+    int maison;             //nb de maisons que possede la banque ( 32 )
+    int hotel;              //nb d'hotels que possede la banque   ( 12 )
+}Banque;
 
 
 
@@ -47,15 +55,13 @@ int nouvellePosition(int actuelle, int sommeDes);
 
 
 
-Case* initPlateau(Case* cases);
-CChance* initCarteChance(CChance* listeCartesChance);
-CCommunaute* initCarteCommunaute(CCommunaute* listeCartesComm);
+
 
 Joueur* initJoueur(int* nbJoueurs);
-void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
 
 
-void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, CChance* listeCartesChance, CCommunaute* listeCartesComm,int* nbCarteC,int* nbCarteComm);
+
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm, Banque* banque);
 
 
 
@@ -70,4 +76,8 @@ void afficherNomsEquipeProjet();
 void quitter();
 
 
-#endif //MONOPOLY_MESFONCTIONS_H
+
+
+#endif //PROJET_MONOPOLY_MESFONCTIONS_H
+
+
