@@ -22,10 +22,7 @@ int main() {
 
     do {
         menuPrincipal();
-        scanf("%d",&choix);
-        //char flush;
-        //scanf("%c", &flush);
-
+        choix = verifChoix();      //On vérifie que choix est bien un entier.
 
         switch(choix) {
             case 1 :

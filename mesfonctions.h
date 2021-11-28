@@ -37,6 +37,8 @@ typedef struct{
     int nbCSP;              //nombre de cartes sortie de prison que le joueur possède 0,1 ou 2.
     int maisons;            //Nombre de maison du joueur
     int hotel;              //Nombre d'hotel du joueur
+
+    bool faillite;          //false par défaut.
 } Joueur;
 
 //Structure Banque.
@@ -48,7 +50,11 @@ typedef struct{
 
 
 void menuPrincipal();
-int menuJoueur();
+void verifArgent(Joueur* listeJoueurs,int i,int aSoustraire);
+void supprimerJoueur(Joueur* listeJoueurs, int i,int* nbJoueurs);
+void menuJoueur();
+
+int verifChoix();
 
 int lancerLesDes();
 int nouvellePosition(int actuelle, int sommeDes);

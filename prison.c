@@ -2,6 +2,7 @@
 // Created by Thomas on 27/11/2021.
 //
 
+#include <stdio.h>
 #include "prison.h"
 #include "mesfonctions.h"
 #include <time.h>
@@ -22,7 +23,7 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
         if(listeJoueurs[i].nbCSP!=0){
             printf("Vous avez %d carte(s) sortie de prison gratuite\n"
                    "Voulez vous en utiliser une ? ( 1 = OUI / 2 = NON )\n",listeJoueurs[i].nbCSP);
-            scanf("%d",&choix);
+            choix = verifChoix();
             switch(choix){
                 case 1:
                     listeJoueurs[i].nbCSP -= 1;
@@ -48,10 +49,14 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
                 if(listeJoueurs[j].nbCSP >= 1){
                     printf("Le joueur %s en possède au moins une\n",listeJoueurs[j].nomJoueur);
                     puts("Souhaitez vous lui acheter? (1:OUI 2:NON)");
-                    scanf("%d",&choix);
+                    choix = verifChoix();
 
                     switch(choix){
                         case 1:
+                            if(listeJoueurs[j].money-50 < 0){
+                                printf("Vous n'avez pas assez d'argent pour acheter cette carte (50 euros)\n");
+                                break;
+                            }
                             printf(">Joueur %d : %s, %s souhaite vous acheter votre carte sortie de prison pour 50 euros, acceptez vous ? (1:OUI 2:NON)\n"
                                     ,j,listeJoueurs[j].nomJoueur, listeJoueurs[i].nomJoueur);
                             scanf("%d",&choix);
@@ -80,8 +85,7 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
 
                     }
                 }
-                else
-                    puts("Personne ne possede de carte sortie de prison.");
+
             }
         }
 
@@ -125,7 +129,7 @@ void lancerDesPrison(Joueur* listeJoueurs, Case* cases, int i, int* lanceDeDes){
         }
         else{
             printf("Vous n'avez pas fait de double, payez 50 euros pour votre liberation\n");
-            listeJoueurs[i].money -= 50;      //Verifier si le joueur a assez d'argent..
+            verifArgent(listeJoueurs,i,50);     //Verifier si le joueur a assez d'argent..
             listeJoueurs[i].prison = 0;
             listeJoueurs[i].tourEnPrison = 0;
             listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);

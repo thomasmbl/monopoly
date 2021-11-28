@@ -2,6 +2,7 @@
 // Created by Thomas on 27/11/2021.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "plateau.h"
 #include "mesfonctions.h"
@@ -330,7 +331,7 @@ Case* initPlateau(Case* cases) {
     cases[29].nomCase = "MANUFACTURE DES TABACS";
     cases[29].typeCase = 1;
     cases[29].groupe = 8;
-    cases[29].prix = 60 ;
+    cases[29].prix = 50 ;
     cases[29].proprio = "Disponible";
 
     cases[29].loyerMaisons[0] = 10;
@@ -352,7 +353,7 @@ Case* initPlateau(Case* cases) {
     cases[31].nomCase = "MON PLAISIR";
     cases[31].typeCase = 1;
     cases[31].groupe = 8;
-    cases[31].prix = 60 ;
+    cases[31].prix = 50 ;
     cases[31].proprio = "Disponible";
 
     cases[31].loyerMaisons[0] = 10;
@@ -370,7 +371,7 @@ Case* initPlateau(Case* cases) {
 }
 
 //Fonction d'affichage du "plateau" en console ainsi que les informations des joueurs dans la partie.
-void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
+void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs,Case* cases) {
     //Affichage des numeros de case du plateau ( 1 à 32 ).
     printf("\n===================================================| Plateau de jeu |================"
            "===================================\n\n");
@@ -387,8 +388,8 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs) {
     //Affichage de la position de chaque joueur sur le plateau ainsi que leur argent.
     printf("\n=====| Informations des joueurs dans la partie |======\n");
     for(int i=0;i<*nbJoueurs;i++){
-        printf("Joueur %d : %s - %d euros - Case : %d\n"
-               "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position);
+        printf("Joueur %d : %s - %d euros - Case %d : %s\n"
+               "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
     }
     printf("======================================================\n\n");
 
@@ -410,15 +411,17 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     if(cases[listeJoueurs[i].position-1].typeCase == 1){
         printf("==> Vous vous trouvez sur une case PROPRIETE\n"
                "\tStatus : %s\n"
-               "\tPrix d'achat : %d\n"
+               "\tPrix d'achat : %d euros\n"
                "\tGroupe : %d\n"
-               "\tNb Maisons : %d / 6\n"
+               "\tNb Maisons : %d / 4\n"
                "\tNb Hotel : %d / 1\n"
+               "\tValeur Hypothecaire : %d euros\n"
                 ,cases[listeJoueurs[i].position-1].proprio
                 ,cases[listeJoueurs[i].position-1].prix
                 ,cases[listeJoueurs[i].position-1].groupe
                 ,cases[listeJoueurs[i].position-1].nbMaisons
-                ,cases[listeJoueurs[i].position-1].nbHotel);
+                ,cases[listeJoueurs[i].position-1].nbHotel
+                ,cases[listeJoueurs[i].position-1].loyerMaisons[0]+cases[listeJoueurs[i].position-1].loyerMaisons[1]);
     }
     //Cases tirage carte communauté.
     else if(cases[listeJoueurs[i].position-1].typeCase == 2){
@@ -435,7 +438,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     //Position du joueur sur le plateau.
     else if(listeJoueurs[i].position == 3){
         printf(">Banque: taxe d'habitation, payez 100euros !\n");
-        listeJoueurs[i].money -= 100;         //Verifier si le joueur a assez d'argent..
+        verifArgent(listeJoueurs,i,100);
     }
 
     else if(listeJoueurs[i].position == 5){
@@ -449,7 +452,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
 
     else if(listeJoueurs[i].position == 11){
         printf(">Banque: Impot sur la fortune, payez 100euros !\n");
-        listeJoueurs[i].money -= 100;        //Verifier si le joueur a assez d'argent..
+        verifArgent(listeJoueurs,i,100);
     }
 
     else if(listeJoueurs[i].position == 13){
@@ -458,8 +461,8 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     }
 
     else if(listeJoueurs[i].position == 19){
-        printf(">Banque: Taxe sur les produits de luxe, payez 200euros !\n"),
-                listeJoueurs[i].money -= 200;    //Verifier si le joueur a assez d'argent..
+        printf(">Banque: Taxe sur les produits de luxe, payez 200euros !\n");
+        verifArgent(listeJoueurs,i,200);
     }
 
     else if(listeJoueurs[i].position == 21){

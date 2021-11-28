@@ -9,7 +9,7 @@
 
 Case* initPlateau(Case* cases);
 
-void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs);
+void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs,Case* cases);
 
 void depart(Joueur* listeJoueurs, int i, int position, int sommeDes);
 void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm);

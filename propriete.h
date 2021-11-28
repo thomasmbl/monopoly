@@ -12,4 +12,5 @@ void acheterMaison(Banque* banque,Joueur* listeJoueurs,int i, Case* cases);
 
 void acheterHotel(Banque* banque,Joueur* listeJoueurs,int i, Case* cases);
 
+void hypothequer(Joueur* listeJoueurs,int i, Case* cases,Banque* banque);
 #endif //PROJET_MONOPOLY_PROPRIETE_H

@@ -24,8 +24,50 @@ void menuPrincipal() {
     printf("==========================================================|\n>");
 }
 
-int menuJoueur(){
-    int choix=0;
+int verifChoix(){
+    char chaine[30];
+    int entier=0;
+    fflush(stdout);
+    fgets(chaine,sizeof chaine,stdin);
+    while( !((entier=atoi(chaine)) || *chaine=='0' )){
+        printf("Choix invalide! Entrez un entier\n>");
+        fflush(stdout);
+        fgets(chaine,sizeof chaine,stdin);
+    }
+    return entier;
+}
+
+void verifArgent(Joueur* listeJoueurs,int i,int aSoustraire){
+    if(listeJoueurs[i].money - aSoustraire < 0 ){
+        printf("Vous n'avez pas assez d'argent pour payer vos dettes !\n"
+               "Vous etes placez en faillite, si vous ne trouvez pas de l'argent avant la fin de votre tour,\n"
+               "sous serez elimine de la partie !\n");
+        listeJoueurs[i].money -= aSoustraire;           //On soustrait qd même pour que le joueur puisse rembourser
+                                                        //sa "dette" mais on le place en état de faillite.
+        listeJoueurs[i].faillite = true;
+    }
+    else{
+        listeJoueurs[i].money -= aSoustraire;
+    }
+}
+
+void supprimerJoueur(Joueur* listeJoueurs, int i,int* nbJoueurs){
+    if(i==0){
+        for(int j=0;j<*nbJoueurs-1;j++){
+            listeJoueurs[j] = listeJoueurs[j+1];
+        }
+    }
+    else if(i==*nbJoueurs-1){
+    }
+    else{
+        for(int j=i;j<*nbJoueurs-1;j++){
+            listeJoueurs[j] = listeJoueurs[j+1];
+        }
+    }
+}
+
+
+void menuJoueur(){
     printf("\n=====| Menu Joueur |=====\n"
            "que souhaitez vous faire ?\n"
            "1/ Lancer les des\n"
@@ -34,11 +76,8 @@ int menuJoueur(){
            "4/ Acheter un hotel\n"
            "5/ Hypothequer une propriete\n"
            "6/ Vendre une propriete\n"
-           "7/ Acheter une propriete\n"
            "0/ Passer son tour.\n"
            "=========================\n>");
-    scanf("%d",&choix);
-    return choix;
 }
 
 int lancerLesDes(){
@@ -96,16 +135,18 @@ Joueur* initJoueur(int* nbJoueurs) {
     int i=0;
     int alea=0;
     Joueur tmp;
+    char flush;
 
     //Entrée du nombre de joueurs ainsi que de leurs noms.
     printf("\n=====| Combien de joueur etes-vous ? |=====\n>");
-    scanf("%d",nbJoueurs);
+    *nbJoueurs = verifChoix();
     Joueur* listeJoueurs = (Joueur*) malloc(*nbJoueurs * sizeof(Joueur) );
 
     for(i=0;i<*nbJoueurs;i++){
         listeJoueurs[i].nomJoueur = (char*) malloc(sizeof(char));
         printf("\nEntrez le nom du joueur %d :",i+1);
         scanf("%s", listeJoueurs[i].nomJoueur);
+        scanf("%c",&flush);
 
         //initialisation des attributs du joueur.
         listeJoueurs[i].money = 1500;
@@ -113,6 +154,9 @@ Joueur* initJoueur(int* nbJoueurs) {
         listeJoueurs[i].prison = 0;
         listeJoueurs[i].nbCSP = 0;
         listeJoueurs[i].tourEnPrison = 0;
+        listeJoueurs[i].maisons = 0;
+        listeJoueurs[i].hotel = 0;
+        listeJoueurs[i].faillite = false;
         printf("Banque: Vous recevez 1500 euros de bienvenue.\n");
     }
 
@@ -133,11 +177,14 @@ Joueur* initJoueur(int* nbJoueurs) {
 }
 
 void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm,Banque* banque) {
-    int tour = 0, choix = 0;
+    int tour = 0;
+    int choix = 0;
+    int choixbis = 0;
+
     do {
         tour += 1;
-        printf("=======================================================| Tour %d |=======================================================", tour);
-        affichagePlateau(listeJoueurs,nbJoueurs);
+        printf("=======================================================| Tour %d |======================================================", tour);
+        affichagePlateau(listeJoueurs,nbJoueurs,cases);
         for (int i = 0; i < *nbJoueurs; i++) {
             //Initialisation des variables a chaque tour de chaque joueurs.
             int lanceDeDes = 0;
@@ -145,13 +192,22 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
             printf("> ********************* C'est a %s de joueur ! *********************\n", listeJoueurs[i].nomJoueur);
             do {
+                printf("Solde : %d euros - Case %d : %s\n",listeJoueurs[i].money,listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
+                if(listeJoueurs[i].faillite == true){
+                    printf("Vous etes en faillite, trouvez de l'argent avant la fin de votre tour sinon vous serez elimine\n");
+                }
+
                 //Si le joueur est en prison, on affiche les options qui lui sont possible pour en sortir.
                 optionPrison(listeJoueurs,i,listeCartesChance,nbCarteC,listeCartesComm,nbJoueurs);
 
-                choix = menuJoueur();
+                //On affiche le menu joueur.
+                menuJoueur();
+
+                //Verification que choix est bien de type int.
+                choix = verifChoix();
                 switch ( choix ) {
                     case 1 :
-                        //Lancer les dés. (Appel de la fonction lancerLesDes 1 fois par personne par tour).
+                        //Lancer les dés. (Appel de la fonction lancerLesDes 1 fois par personne par tour)============//
 
                         //On vérif si le joueur n'est pas en prison.
                         //Si c'est le cas alors il n'a le droit qu'a un seul lancé par tour, même si c'est un double.
@@ -169,7 +225,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         }
 
                         //S'il n'a pas déjà lancé alors il peut les lancer.
-                        //On modifie la position des joueurs.
+                        //On enregistre la position précédente du joueur et le retour de la fonction lancerLesDes.
                         position = listeJoueurs[i].position;
                         sommeDes = lancerLesDes();
 
@@ -182,7 +238,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                             break;   //On break pour qu'il ne prenne pas la prime de 200 euros dans le cas ou il passerait par la case depart.
                         }
                         else{
-                            //Sinon on actualise la position
+                            //Sinon on actualise la position.
                             listeJoueurs[i].position = nouvellePosition( listeJoueurs[i].position, sommeDes );
                             lanceDeDes = 1;
                         }
@@ -207,8 +263,33 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         //Acheter un hotel.
                         acheterHotel(banque,listeJoueurs,i,cases);
                         break;
+                    case 5:
+                        //Hypothéquer une propriété.
+                        hypothequer(listeJoueurs,i,cases,banque);
+                        break;
                     case 0:
                         //Passer son tour.
+                        if(listeJoueurs[i].faillite == true){
+                            printf("Vous etes en faillite!\n"
+                                   "Si vous quittez vous serez elimine!\n");
+                            printf("> Passer votre tour ? ( 1 = OUI / 2 = NON )\n>");
+                            choixbis = verifChoix();
+                            switch(choixbis){
+                                case 1:
+                                    //Le joueur est elimine.
+                                    //Procédure qui le supprime de la liste des joueurs.
+                                    printf("Joueur %d : %s est elimine !\n",i,listeJoueurs[i].nomJoueur);
+                                    supprimerJoueur(listeJoueurs,i,nbJoueurs);
+                                    *nbJoueurs -= 1;
+                                    i-=1;
+                                    break;
+                                case 2:
+                                    break;
+                                default:
+                                    puts("Choix invalide!");
+                                    break;
+                            }
+                        }
                         break;
                     default :
                         printf("Choix invalide!\n");
@@ -216,28 +297,15 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                 }
             }while (choix != 0);
         }
-    }while (*nbJoueurs != 0);
+    }while (*nbJoueurs > 1);
+    printf("\n                    __________                      \n"
+           "*--------------*|======MONOPOLY======|*--------------*\n"
+           "                       GAGNANT :                      \n"
+           "                        %s                            \n"
+           "                       argent : %d euros              \n"
+           "*--------------*|====================|*--------------*\n\n"
+           ,listeJoueurs[0].nomJoueur,listeJoueurs[0].money );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //====================================================================================================================//
@@ -253,10 +321,12 @@ void afficherNomsEquipeProjet(){
 //Procédure en référence au choix 6 du menu principal.
 void quitter(){
     char verifChoix[4];
+    char flush;
     do{
         printf("Etes vous sur de vouloir quitter ?\n"
                "OUI ou NON\n>");
         scanf("%s",&verifChoix);
+        scanf("%c",&flush);
 
         //Comparaison de chaînes pour savoir si ce que l'utilisateur à entré est valide ou non.
         if( strcmp(verifChoix,"oui") == 0 || strcmp(verifChoix,"OUI") == 0 ){              //stcrmp return 0 si les 2

@@ -22,7 +22,7 @@ void initCarteChance(char** listeCartesChance){
     listeCartesChance[4] = "Carte sortez de prison";
     listeCartesChance[5] = "Reculez de 3 cases";
     listeCartesChance[6] = "Allez directement en prison, vous ne passez pas par la case depart";
-    listeCartesChance[7] = "Vous faites des reparations sur vos proprietes : Payez 25euros/maison et 100euros/hôtel.";
+    listeCartesChance[7] = "Vous faites des reparations sur vos proprietes : Payez 25euros/maison et 100euros/hotel.";
     listeCartesChance[8] = "Vous avez ete elu maire, payez 50euros a chaque joueur";
     listeCartesChance[9] = "Exces de vitesse : payez 100euros";
 
@@ -51,7 +51,7 @@ void initCarteCommunaute(char** listeCartesComm){
     listeCartesComm[6] = "Vous recuperez des rentes : gagnez 100euros";
     listeCartesComm[7] = "Payez des frais d’hopital de 100euros";
     listeCartesComm[8] = "Vous avez obtenu la seconde place d’un concours de beaute : gagnez 10euros";
-    listeCartesComm[9] = "Vous héritez de 100euros";
+    listeCartesComm[9] = "Vous heritez de 100euros";
 
     //On mélange la pile de carte.
     srand(time(NULL));
@@ -66,7 +66,7 @@ void initCarteCommunaute(char** listeCartesComm){
 int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, int* nbJoueurs){
 
     printf("Vous avez tirez la carte :\n"
-           "\t==> %s",listeCartes[0]);
+           "\t==> %s\n",listeCartes[0]);
 
     if(strcmp(listeCartes[0],"Carte sortez de prison")==0){
         *nbCartes -= 1;
@@ -109,23 +109,32 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
             listeJoueurs[i].prison = 1;
             listeJoueurs[i].tourEnPrison = 3;
         }
-        if(strcmp(listeCartes[0],"Vous faites des reparations sur vos proprietes : Payez 25euros/maison et 100euros/hôtel.")==0){
-            listeJoueurs[i].money -= 25*listeJoueurs[i].maisons + 100*listeJoueurs[i].hotel;
+        if(strcmp(listeCartes[0],"Vous faites des reparations sur vos proprietes : Payez 25euros/maison et 100euros/hotel.")==0){
+            verifArgent(listeJoueurs,i,25*listeJoueurs[i].maisons + 100*listeJoueurs[i].hotel);
         }
         if(strcmp(listeCartes[0],"Vous avez ete elu maire, payez 50euros a chaque joueur")==0){
+
             for(int j=0;j<*nbJoueurs;j++){
-                if(i==j);
-                else{
-                    listeJoueurs[i].money -= 50;
-                    listeJoueurs[j].money += 50;
+                verifArgent(listeJoueurs,i,50);
+                if( listeJoueurs[i].faillite == false ){
+                    if(i==j);
+                    else{
+                        listeJoueurs[j].money += 50;
+                    }
                 }
+                else if( listeJoueurs[i].faillite == true ){
+                    printf("Vous ne pouvez pas payer %s\n",listeJoueurs[j].nomJoueur);
+                    //On ne paye pas le joueur j pour ne pas creer de l'argent.
+                }
+
+
             }
         }
         if(strcmp(listeCartes[0],"Exces de vitesse : payez 100euros")==0){
-            listeJoueurs[i].money -= 100;
+            verifArgent(listeJoueurs,i,100);
         }
         if(strcmp(listeCartes[0],"Frais de docteur. Payez 50euros")==0){
-            listeJoueurs[i].money -= 50;
+            verifArgent(listeJoueurs,i,50);
         }
         if(strcmp(listeCartes[0],"Vous faites un vide grenier et gagnez 30euros")==0){
             listeJoueurs[i].money += 30;
@@ -134,18 +143,29 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
             for(int j=0;j<*nbJoueurs;j++){
                 if(i==j);
                 else{
-                    listeJoueurs[i].money += 30;
-                    listeJoueurs[j].money -= 30;
+                    if(listeJoueurs[j].money - 10 < 0 ){
+                        printf("%s n'a pas assez d'argent pour vous payer!\n"
+                               "Il est place en faillite, s'il ne trouvez pas de l'argent avant la fin de son tour,\n"
+                               "il sera elimine de la partie !\n",
+                               listeJoueurs[j].nomJoueur);
+
+                        listeJoueurs[j].money -= 10;
+                        listeJoueurs[j].faillite = true;
+                    }
+                    else{
+                        listeJoueurs[j].money -= 10;
+                        listeJoueurs[i].money += 10;
+                    }
                 }
             }
         }
         if(strcmp(listeCartes[0],"Vous recuperez des rentes : gagnez 100euros")==0){
             listeJoueurs[i].money += 100;
         }
-        if(strcmp(listeCartes[0],"Payez des frais d’hopital de 100euros")==0){
-            listeJoueurs[i].money -= 100;
+        if(strcmp(listeCartes[0],"Payez des frais d hopital de 100euros")==0){
+            verifArgent(listeJoueurs,i,100);
         }
-        if(strcmp(listeCartes[0],"Vous avez obtenu la seconde place d’un concours de beaute : gagnez 10euros")==0){
+        if(strcmp(listeCartes[0],"Vous avez obtenu la seconde place d un concours de beaute : gagnez 10euros")==0){
             listeJoueurs[i].money += 10;
         }
         if(strcmp(listeCartes[0],"Vous héritez de 100euros")==0){
