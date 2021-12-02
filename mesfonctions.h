@@ -35,6 +35,8 @@ typedef struct{
     int prison;             //1 VRAI 0 FAUX.
     int tourEnPrison;       //Max 3 tours en prison. Après il est libéré.
     int nbCSP;              //nombre de cartes sortie de prison que le joueur possède 0,1 ou 2.
+
+    int prop;               //Nombre de prop (non hypothéqué) que possède le joueur
     int maisons;            //Nombre de maison du joueur
     int hotel;              //Nombre d'hotel du joueur
 

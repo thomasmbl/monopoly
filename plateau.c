@@ -438,6 +438,41 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                 ,cases[listeJoueurs[i].position-1].nbMaisons
                 ,cases[listeJoueurs[i].position-1].nbHotel
                 ,cases[listeJoueurs[i].position-1].prix-cases[listeJoueurs[i].position-1].loyerMaisons[0]);
+
+        if( !(strcmp(listeJoueurs[i].nomJoueur,"Disponible") == 0)
+                            &&
+            strcmp(listeJoueurs[i].nomJoueur,cases[listeJoueurs[i].position-1].proprio) != 0
+                            &&
+            cases[listeJoueurs[i].position-1].hypotheque == false ){
+
+            //On paye le loyer au joueur correspondant
+            for(int j=0;j<*nbJoueurs;j++){
+                if( strcmp( listeJoueurs[j].nomJoueur,cases[listeJoueurs[i].position-1].proprio ) == 0 ){
+                    if( cases[listeJoueurs[i].position-1].nbMaisons == 0 && cases[listeJoueurs[i].position-1].nbHotel == 0 ){
+
+                        printf("Vous devez payer %d euros a %s\n",cases[listeJoueurs[i].position-1].prix / 5,listeJoueurs[j].nomJoueur);
+
+                        verifArgent(listeJoueurs,i,cases[listeJoueurs[i].position-1].prix / 5);
+                        listeJoueurs[j].money += cases[listeJoueurs[i].position-1].prix / 5 ;
+                    }
+                    else if( cases[listeJoueurs[i].position-1].nbMaisons > 0 ){
+
+                        printf("Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]
+                                                                 ,listeJoueurs[j].nomJoueur);
+
+                        verifArgent(listeJoueurs,i,cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]);
+                        listeJoueurs[j].money += cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ];
+                    }
+                    else if( cases[listeJoueurs[i].position-1].nbHotel == 1 ){
+
+                        printf("Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerHotel,listeJoueurs[j].nomJoueur);
+
+                        verifArgent(listeJoueurs,i,cases[ listeJoueurs[i].position-1 ].loyerHotel);
+                        listeJoueurs[j].money += cases[ listeJoueurs[i].position-1 ].loyerHotel;
+                    }
+                }
+            }
+        }
     }
     //Cases tirage carte communauté.
     else if(cases[listeJoueurs[i].position-1].typeCase == 2){

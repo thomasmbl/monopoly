@@ -17,7 +17,7 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
                "\t- Acheter la carte : sortie de prison gratuite a un autre joueur et la jouer\n"
                "\t- Payer une amande de 50euros avant de lancer les des lors d'un de vos 2 prochains tours\n"
                "\t- Si vous ne parvenez pas a faire un double a votre 3eme tour (tour restant : %d), vous payez 50euros\n"
-                ,listeJoueurs[i].nbCSP,listeJoueurs[i].tourEnPrison,listeJoueurs[i].tourEnPrison);
+                ,listeJoueurs[i].tourEnPrison,listeJoueurs[i].nbCSP,listeJoueurs[i].tourEnPrison);
         int choix=0;
 
         if(listeJoueurs[i].nbCSP!=0){

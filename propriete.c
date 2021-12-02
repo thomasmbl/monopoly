@@ -19,8 +19,8 @@ void acheterPropriete(Joueur* listeJoueurs,int i, Case* cases,const int* nbJoueu
             switch (choix) {
                 case 1:
                     listeJoueurs[i].money -= cases[listeJoueurs[i].position-1].prix;
+                    listeJoueurs[i].prop += 1;
                     cases[listeJoueurs[i].position-1].proprio = listeJoueurs[i].nomJoueur;
-                    //strcpy( cases[listeJoueurs[i].position-1].proprio , listeJoueurs[i].nomJoueur );
                     break;
                 case 2:
                     break;
@@ -128,12 +128,12 @@ void hypothequer(Joueur* listeJoueurs,int i, Case* cases,Banque* banque){
     int choix=0;
 
 
-   if(listeJoueurs[i].maisons > 0 || listeJoueurs[i].hotel > 0){
+   if(listeJoueurs[i].prop != 0){
        printf("Propriete(s) que vous possedez : \n");
        for(int j=0;j<32;j++){
            if( cases[j].typeCase == 1 && strcmp(cases[j].proprio,listeJoueurs[i].nomJoueur) == 0 ){
                printf("\tCase %d : %s ==> %d/4 maisons | %d/1 hotel , valeur hypothecaire = %d euros\n"
-                      ,j+1, cases[j].nomCase, cases[j].nbMaisons, cases[j].nbHotel, cases[j].loyerMaisons[0]+cases[j].loyerMaisons[1]);
+                      ,j+1, cases[j].nomCase, cases[j].nbMaisons, cases[j].nbHotel, cases[j].prix - cases[j].loyerMaisons[0]);
            }
        }
        printf("Si vous souhaitez hypothequer une de vos proprietes, vous devrez vendre toutes les maisons/hotel que vous avez construit dessus\n");
@@ -146,26 +146,37 @@ void hypothequer(Joueur* listeJoueurs,int i, Case* cases,Banque* banque){
        switch (choix) {
            case 1:
                if( cases[choixHypo-1].typeCase == 1 && strcmp(cases[choixHypo-1].proprio,listeJoueurs[i].nomJoueur) == 0 && cases[choixHypo-1].nbHotel==1 ){
+
                    cases[choixHypo-1].nbHotel -= 1;
                    listeJoueurs[i].hotel -= 1;
                    banque->hotel += 1;
 
-                   printf(">Banque: Vous recevez : %d euros\n",200 + cases[choixHypo-1].loyerMaisons[0] + cases[choixHypo-1].loyerMaisons[1] );
-                   listeJoueurs[i].money += 200 + cases[choixHypo-1].loyerMaisons[0] + cases[choixHypo-1].loyerMaisons[1];
+                   printf(">Banque: Vous recevez : %d euros\n",200 + cases[choixHypo-1].prix - cases[choixHypo-1].loyerMaisons[0] );
+                   listeJoueurs[i].money += 200 + cases[choixHypo-1].prix - cases[choixHypo-1].loyerMaisons[0];
 
+                   listeJoueurs[i].prop -= 1;
                    cases[choixHypo-1].hypotheque = true;
 
                }
-               else if( cases[choixHypo-1].typeCase == 1 && strcmp(cases[choixHypo-1].proprio,listeJoueurs[i].nomJoueur) == 0 && cases[choixHypo-1].nbHotel>=0 ){
-                   printf("Banque> Vous recevez : %d euros\n",50*cases[choixHypo-1].nbMaisons + cases[choixHypo-1].loyerMaisons[0] + cases[choixHypo-1].loyerMaisons[1] );
+               else if( cases[choixHypo-1].typeCase == 1 && strcmp(cases[choixHypo-1].proprio,listeJoueurs[i].nomJoueur) == 0 && cases[choixHypo-1].nbMaisons>=0 ){
+                   printf("Banque> Vous recevez : %d euros\n",50*cases[choixHypo-1].nbMaisons
+                                                              + cases[choixHypo-1].prix
+                                                              - cases[choixHypo-1].loyerMaisons[0] );
+
+                   listeJoueurs[i].money += 50*cases[choixHypo-1].nbMaisons
+                                            + cases[choixHypo-1].prix
+                                            - cases[choixHypo-1].loyerMaisons[0];
+
+                   listeJoueurs[i].prop -= 1;
                    cases[choixHypo-1].hypotheque = true;
 
                    listeJoueurs[i].maisons -= cases[choixHypo-1].nbMaisons;
                    banque->maison += cases[choixHypo-1].nbMaisons;
                    cases[choixHypo-1].nbMaisons = 0;
                }
-
-
+               else{
+                   printf("Choix invalide!\n");
+               }
                break;
            case 2:
                break;
@@ -178,4 +189,68 @@ void hypothequer(Joueur* listeJoueurs,int i, Case* cases,Banque* banque){
    else
        puts("Vous ne possedez pas de propriete");
 }
+
+void vendre(Joueur* listeJoueurs,int i, Case* cases,Banque* banque){
+    int choixVendre=0;
+    int choix=0;
+
+
+    if(listeJoueurs[i].prop != 0){
+        printf("Propriete(s) que vous possedez : \n");
+        for(int j=0;j<32;j++){
+            if( cases[j].typeCase == 1 && strcmp(cases[j].proprio,listeJoueurs[i].nomJoueur) == 0 ){
+                printf("\tCase %d : %s ==> %d/4 maisons | %d/1 hotel , valeur vente = %d euros\n"
+                        ,j+1, cases[j].nomCase, cases[j].nbMaisons, cases[j].nbHotel, cases[j].prix / 2 );
+            }
+        }
+        printf("Si vous souhaitez vendre une de vos proprietes, vous devrez vendre toutes les maisons/hotel que vous avez construit dessus\n");
+        printf("Quelle propriete souhaitez vous vendre (entrez le numero de la case) ?\n>");
+        choixVendre=verifChoix();
+
+        printf("Confirmez vous ? ( 1 = OUI / 2 = NON )\n>");
+        choix = verifChoix();
+
+        switch (choix) {
+            case 1:
+                if( cases[choixVendre-1].typeCase == 1 && strcmp(cases[choixVendre-1].proprio,listeJoueurs[i].nomJoueur) == 0 ){
+
+                    cases[choixVendre-1].nbHotel -= 1;
+                    listeJoueurs[i].hotel -= 1;
+                    banque->hotel += 1;
+
+                    printf(">Banque: Vous recevez : %d euros\n",200 + cases[choixVendre-1].prix / 2 );
+                    listeJoueurs[i].money += 200 + cases[choixVendre-1].prix / 2;
+
+                    listeJoueurs[i].prop -= 1;
+                    cases[listeJoueurs[i].position-1].proprio = "Disponible";
+                }
+                else if( cases[choixVendre-1].typeCase == 1 && strcmp(cases[choixVendre-1].proprio,listeJoueurs[i].nomJoueur) == 0 && cases[choixVendre-1].nbMaisons >=0 ){
+                    printf("Banque> Vous recevez : %d euros\n",50*cases[choixVendre-1].nbMaisons
+                                                               + cases[choixVendre-1].prix / 2);
+
+                    listeJoueurs[i].money += 50*cases[choixVendre-1].nbMaisons
+                                             + cases[choixVendre-1].prix / 2;
+
+                    listeJoueurs[i].prop -= 1;
+
+                    listeJoueurs[i].maisons -= cases[choixVendre-1].nbMaisons;
+                    banque->maison += cases[choixVendre-1].nbMaisons;
+                    cases[choixVendre-1].nbMaisons = 0;
+
+                    cases[listeJoueurs[i].position-1].proprio = "Disponible";
+                }
+
+                break;
+            case 2:
+                break;
+            default:
+                puts("Choix invalide!");
+                break;
+        }
+
+        }
+
+}
+
+
 

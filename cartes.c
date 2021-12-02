@@ -49,7 +49,7 @@ void initCarteCommunaute(char** listeCartesComm){
     listeCartesComm[4] = "Vous faites un vide grenier et gagnez 30euros";
     listeCartesComm[5] = "C’est votre anniversaire, collectez 10euros de chaque joueur";
     listeCartesComm[6] = "Vous recuperez des rentes : gagnez 100euros";
-    listeCartesComm[7] = "Payez des frais d’hopital de 100euros";
+    listeCartesComm[7] = "Payez des frais d'hopital de 100euros";
     listeCartesComm[8] = "Vous avez obtenu la seconde place d’un concours de beaute : gagnez 10euros";
     listeCartesComm[9] = "Vous heritez de 100euros";
 
@@ -65,13 +65,13 @@ void initCarteCommunaute(char** listeCartesComm){
 
 int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, int* nbJoueurs){
 
-    printf("Vous avez tirez la carte :\n"
-           "\t==> %s\n",listeCartes[0]);
+    printf("\nVous avez tirez la carte :"
+           " %s\n",listeCartes[0]);
 
     if(strcmp(listeCartes[0],"Carte sortez de prison")==0){
         *nbCartes -= 1;
         for(int j=0;j<*nbCartes;j++){
-            strcpy(listeCartes[j],listeCartes[j+1]);
+            listeCartes[j] = listeCartes[j+1];
         }
         return 1;
     }

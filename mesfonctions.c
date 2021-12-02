@@ -71,6 +71,9 @@ void supprimerJoueur(Joueur* listeJoueurs, int i,int* nbJoueurs){
 
 
 void menuJoueur(){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(hConsole,5);
     printf("\n=====| Menu Joueur |=====\n"
            "que souhaitez vous faire ?\n"
            "1/ Lancer les des\n"
@@ -82,6 +85,7 @@ void menuJoueur(){
            "7/ Menu Principal\n"
            "0/ Passer son tour.\n"
            "=========================\n>");
+    SetConsoleTextAttribute(hConsole,7);
 }
 
 int lancerLesDes(int* nbDoubles,int* lanceDeDes){
@@ -161,6 +165,7 @@ Joueur* initJoueur(int* nbJoueurs) {
         listeJoueurs[i].prison = 0;
         listeJoueurs[i].nbCSP = 0;
         listeJoueurs[i].tourEnPrison = 0;
+        listeJoueurs[i].prop = 0;
         listeJoueurs[i].maisons = 0;
         listeJoueurs[i].hotel = 0;
         listeJoueurs[i].faillite = false;
@@ -189,14 +194,24 @@ Joueur* initJoueur(int* nbJoueurs) {
     return listeJoueurs;
 }
 
-void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm,Banque* banque) {
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque) {
     int tour = 0;
     int choix = 0;
     int choixbis = 0;
+    int nbJoueursDepart = *nbJoueurs;
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
     do {
         tour += 1;
-        printf("=======================================================| Tour %d |======================================================", tour);
+        SetConsoleTextAttribute(hConsole,5);
+        printf("=======================================================| ");
+        SetConsoleTextAttribute(hConsole,14);
+        printf("Tour %d",tour);
+        SetConsoleTextAttribute(hConsole,5);
+        printf(" |======================================================");
+        SetConsoleTextAttribute(hConsole,7);
+
         affichagePlateau(listeJoueurs,nbJoueurs,cases);
         for (int i = 0; i < *nbJoueurs; i++) {
             //Initialisation des variables a chaque tour de chaque joueurs.
@@ -247,13 +262,11 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         if(sommeDes == 0){
                             listeJoueurs[i].prison = 1;
                             listeJoueurs[i].tourEnPrison = 3;   //Il a au plus encore 3 tours à faire en prison.
-                            lanceDeDes = 1;
                             break;   //On break pour qu'il ne prenne pas la prime de 200 euros dans le cas ou il passerait par la case depart.
                         }
                         else{
                             //Sinon on actualise la position.
                             listeJoueurs[i].position = nouvellePosition( listeJoueurs[i].position, sommeDes );
-                            lanceDeDes = 1;
                         }
 
                         //On ajoute 200 euros au joueur s'il est/ou passe par la case depart.
@@ -280,6 +293,8 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         hypothequer(listeJoueurs,i,cases,banque);
                         break;
                     case 6:
+                        //Vendre des biens.
+                        vendre(listeJoueurs,i,cases,banque);
                         break;
                     case 7:
                         //Menu Principal
@@ -313,7 +328,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
                     case 0:
                         //Passer son tour.
-                        if(listeJoueurs[i].faillite == true){
+                        if(listeJoueurs[i].faillite == true && listeJoueurs[i].money < 0 ){
                             printf("Vous etes en faillite!\n"
                                    "Si vous quittez vous serez elimine!\n");
                             printf("> Passer votre tour ? ( 1 = OUI / 2 = NON )\n>");
@@ -334,21 +349,32 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                                     break;
                             }
                         }
+                        else if(listeJoueurs[i].faillite == true && listeJoueurs[i].money > 0 ){
+                            listeJoueurs[i].faillite = false;
+                        }
                         break;
                     default :
                         printf("Choix invalide!\n");
                         break;
                 }
-            }while (choix != 0);
+            }while (choix != 0 && *nbJoueurs > 1);
         }
     }while (*nbJoueurs > 1);
+    SetConsoleTextAttribute(hConsole,14);
     printf("\n                    __________                      \n"
            "*--------------*|======MONOPOLY======|*--------------*\n"
-           "                       GAGNANT :                      \n"
-           "                        %s                            \n"
-           "                       argent : %d euros              \n"
+           "                  GAGNANT : %s                        \n"
+           "                                                      \n"
+           "                  Argent : %d euros                   \n"
            "*--------------*|====================|*--------------*\n\n"
            ,listeJoueurs[0].nomJoueur,listeJoueurs[0].money );
+    SetConsoleTextAttribute(hConsole,7);
+
+
+    for(int i=0;i<nbJoueursDepart;i++){
+        free(listeJoueurs[i].nomJoueur);
+    }
+    free(listeJoueurs);
 }
 
 
