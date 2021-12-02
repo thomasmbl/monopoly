@@ -56,7 +56,7 @@ void menuJoueur();
 
 int verifChoix();
 
-int lancerLesDes();
+int lancerLesDes(int* nbDoubles,int* lanceDeDes);
 int nouvellePosition(int actuelle, int sommeDes);
 
 

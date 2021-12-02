@@ -3,9 +3,11 @@
 #include "mesfonctions.h"
 #include "cartes.h"
 #include "plateau.h"
+#include <windows.h>
 
 
 int main() {
+    //Initialisation des variables.
     int choix=0,i=0;
     int nbJoueurs=0;
     Joueur* listeJoueurs;
@@ -15,23 +17,46 @@ int main() {
     int nbCarteC = 10, nbCarteComm = 10;
     Banque banque = {32,12};
 
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    //Je m'amuse avec les couleurs.....
+    SetConsoleTextAttribute(hConsole,14);
     printf("|=*************************************************************=|\n"
-           "|=====================| MONOPOLY-ECE-2021 |=====================|\n"
+           "|=====================| ");
+
+    SetConsoleTextAttribute(hConsole,10);
+    printf("MONOPOLY");
+    SetConsoleTextAttribute(hConsole,14);
+    printf("-");
+    SetConsoleTextAttribute(hConsole,10);
+    printf("ECE");
+    SetConsoleTextAttribute(hConsole,14);
+    printf("-");
+    SetConsoleTextAttribute(hConsole,10);
+    printf("2021");
+
+    SetConsoleTextAttribute(hConsole,14);
+    printf(                                          " |=====================|\n"
            "|=*************************************************************=|\n\n");
+    SetConsoleTextAttribute(hConsole,7);
+
 
     do {
+        SetConsoleTextAttribute(hConsole,5);
         menuPrincipal();
+        SetConsoleTextAttribute(hConsole,7);
+
         choix = verifChoix();      //On vérifie que choix est bien un entier.
 
         switch(choix) {
             case 1 :
                 //Lancer une nouvelle partie.
-
+                SetConsoleTextAttribute(hConsole,0);
                 printf("Lancement nouvelle partie...\n");
 
                 //Initialisation du plateau de jeu.
                 printf("Initialisation du plateau de jeu....\n");
+                SetConsoleTextAttribute(hConsole,7);
                 cases = initPlateau(cases);
 
                 //Initialisation des piles de cartes chance et communauté.

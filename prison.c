@@ -12,12 +12,12 @@
 void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nbCarteC,char** listeCartesComm, int* nbJoueurs){
     if(listeJoueurs[i].prison == 1){
         printf("Vous etes en prison ! Pour vous en echapper :\n"
-               "\t1/Faire un double sur l'un de vos %d prochains tours.\n"
-               "\t2/Utiliser la carte : sortie de prison gratuite.\n"
-               "\t3/Acheter la carte : sortie de prison gratuite a un autre joueur et la jouer\n"
-               "\t4/Payer une amande de 50euros avant de lancer les des lors d'un de vos 2 prochains tours\n"
-               "\t5/Si vous ne parvenez pas a faire un double a votre 3eme tour (tour restant : %d), vous payez 50euros\n"
-                ,listeJoueurs[i].tourEnPrison,listeJoueurs[i].tourEnPrison);
+               "\t- Faire un double sur l'un de vos %d prochains tours.\n"
+               "\t- Utiliser la carte : sortie de prison gratuite ( %d / 2 ).\n"
+               "\t- Acheter la carte : sortie de prison gratuite a un autre joueur et la jouer\n"
+               "\t- Payer une amande de 50euros avant de lancer les des lors d'un de vos 2 prochains tours\n"
+               "\t- Si vous ne parvenez pas a faire un double a votre 3eme tour (tour restant : %d), vous payez 50euros\n"
+                ,listeJoueurs[i].nbCSP,listeJoueurs[i].tourEnPrison,listeJoueurs[i].tourEnPrison);
         int choix=0;
 
         if(listeJoueurs[i].nbCSP!=0){
@@ -43,11 +43,11 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
             }
         }
         else{
-
+            printf("Joueur(s) qui en possède au moins une : \n");
             for(int j=0;j<*nbJoueurs;j++){
 
                 if(listeJoueurs[j].nbCSP >= 1){
-                    printf("Le joueur %s en possède au moins une\n",listeJoueurs[j].nomJoueur);
+                    printf("%s\n",listeJoueurs[j].nomJoueur);
                     puts("Souhaitez vous lui acheter? (1:OUI 2:NON)");
                     choix = verifChoix();
 

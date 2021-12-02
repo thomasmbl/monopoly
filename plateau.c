@@ -7,6 +7,7 @@
 #include "plateau.h"
 #include "mesfonctions.h"
 #include "cartes.h"
+#include <windows.h>
 
 //Fonction d'initialisation des 32 cases du plateau.
 Case* initPlateau(Case* cases) {
@@ -372,9 +373,18 @@ Case* initPlateau(Case* cases) {
 
 //Fonction d'affichage du "plateau" en console ainsi que les informations des joueurs dans la partie.
 void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs,Case* cases) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     //Affichage des numeros de case du plateau ( 1 à 32 ).
-    printf("\n===================================================| Plateau de jeu |================"
+    SetConsoleTextAttribute(hConsole,5);
+    printf("\n===================================================| ");
+    SetConsoleTextAttribute(hConsole,14);
+    printf("Plateau de jeu");
+    SetConsoleTextAttribute(hConsole,5);
+    printf(" |================"
            "===================================\n\n");
+    SetConsoleTextAttribute(hConsole,15);
+
     for(int i=1;i<=32;i++){
         printf(" CASE %d \t",i);
         //Condition pour le retour a la ligne en console ( tableau de 4 lignes par 8 colonnes ).
@@ -382,16 +392,22 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs,Case* cases) {
             printf("\n");
         }
     }
+    SetConsoleTextAttribute(hConsole,5);
     printf("======================================================================================="
            "=================================\n");
 
     //Affichage de la position de chaque joueur sur le plateau ainsi que leur argent.
     printf("\n=====| Informations des joueurs dans la partie |======\n");
     for(int i=0;i<*nbJoueurs;i++){
-        printf("Joueur %d : %s - %d euros - Case %d : %s\n"
-               "", i+1, listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
+        SetConsoleTextAttribute(hConsole,5);
+        printf("Joueur %d : ",i+1);
+
+        printf("%s - %d euros - Case %d : %s\n"
+               "",listeJoueurs[i].nomJoueur, listeJoueurs[i].money, listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
     }
+    SetConsoleTextAttribute(hConsole,5);
     printf("======================================================\n\n");
+    SetConsoleTextAttribute(hConsole,7);
 
 }
 
@@ -404,7 +420,7 @@ void depart(Joueur* listeJoueurs, int i, int position, int sommeDes){
 
 void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm){
 
-    printf("\nVous etes maintenant sur la case %d : %s\n",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
+    printf("\nVous etes maintenant sur la case %d : %s ",listeJoueurs[i].position, cases[listeJoueurs[i].position-1].nomCase);
 
     //Type de case
     //Si le joueur se trouve sur une propriété, on affiche les informations utiles.
@@ -421,23 +437,21 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                 ,cases[listeJoueurs[i].position-1].groupe
                 ,cases[listeJoueurs[i].position-1].nbMaisons
                 ,cases[listeJoueurs[i].position-1].nbHotel
-                ,cases[listeJoueurs[i].position-1].loyerMaisons[0]+cases[listeJoueurs[i].position-1].loyerMaisons[1]);
+                ,cases[listeJoueurs[i].position-1].prix-cases[listeJoueurs[i].position-1].loyerMaisons[0]);
     }
     //Cases tirage carte communauté.
     else if(cases[listeJoueurs[i].position-1].typeCase == 2){
-        printf(">Tirage carte communaute\n");
         listeJoueurs[i].nbCSP += tirerCarte(listeCartesComm,nbCarteComm,listeJoueurs,i,nbJoueurs);
     }
     //Cases tirage carte chance.
     else if(cases[listeJoueurs[i].position-1].typeCase == 3){
-        printf(">Tirage carte carte\n");
         listeJoueurs[i].nbCSP += tirerCarte(listeCartesChance,nbCarteC,listeJoueurs,i,nbJoueurs);
     }
 
 
     //Position du joueur sur le plateau.
     else if(listeJoueurs[i].position == 3){
-        printf(">Banque: taxe d'habitation, payez 100euros !\n");
+        printf(">Banque: Payez 100euros !\n");
         verifArgent(listeJoueurs,i,100);
     }
 
@@ -451,7 +465,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     }
 
     else if(listeJoueurs[i].position == 11){
-        printf(">Banque: Impot sur la fortune, payez 100euros !\n");
+        printf(">Banque: Payez 100euros !\n");
         verifArgent(listeJoueurs,i,100);
     }
 
@@ -461,7 +475,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     }
 
     else if(listeJoueurs[i].position == 19){
-        printf(">Banque: Taxe sur les produits de luxe, payez 200euros !\n");
+        printf(">Banque: Payez 200euros !\n");
         verifArgent(listeJoueurs,i,200);
     }
 

@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include "propriete.h"
+#include <windows.h>
+
+
 
 
 //====================================================================================================================//
@@ -75,39 +78,40 @@ void menuJoueur(){
            "3/ Acheter une maison\n"
            "4/ Acheter un hotel\n"
            "5/ Hypothequer une propriete\n"
-           "6/ Vendre une propriete\n"
+           "6/ Vendre des biens\n"
+           "7/ Menu Principal\n"
            "0/ Passer son tour.\n"
            "=========================\n>");
 }
 
-int lancerLesDes(){
-    int de1 = 0, de2 = 0, somme=0, nbDoubles = 0;
-    do{
-        printf("\nLancement des des ! ");
-        //Affectation de valeurs aléatoires pour nos 2 dés (1 à 6).
-        de1 = rand()%6+1;
-        de2 = rand()%6+1;
+int lancerLesDes(int* nbDoubles,int* lanceDeDes){
+    int de1 = 0, de2 = 0, somme=0;
 
-        somme += de1 + de2;
+    printf("\nLancement des des !");
+    //Affectation de valeurs aléatoires pour nos 2 dés (1 à 6).
+    de1 = rand()%6+1;
+    de2 = rand()%6+1;
 
-        printf("> de1 = %d , de2 = %d , somme = %d. ==> ", de1, de2, somme);
+    somme += de1 + de2;
 
-        if(de1 != de2){
-            printf("Vous avancez de %d cases\n",somme);
-            return somme;
-        }
-        else if(de1==de2){
-            printf("Vous avez fait un DOUBLE!\n");
-            nbDoubles += 1;
-        }
-    }while( (de1==de2) && nbDoubles < 3 );     //Conditions pour relancer les dés, max 3 lancés.
+    printf("\nde1 = %d\nde2 = %d\n==> ", de1, de2);
 
-    if( nbDoubles == 3 ){                      //Si 3 doubles alors le joueur va en prison.
-        printf("3 DOUBLES D'AFFILE !!!\n"
-               "Trop de chance finit par porter mal chance ! Aller directement en prison :c\n");
-        return 0;
+    if(de1 != de2){
+        printf("Vous avancez de %d cases\n",somme);
+        *lanceDeDes = 1;
+        return somme;
     }
-
+    else if(de1==de2){
+        printf("Vous avez fait un DOUBLE!\n>Vous avez le droit a un autres lance de des.\n");
+        *nbDoubles += 1;
+        return somme;
+    }
+    else if( (de1==de2) && *nbDoubles == 3 ){                      //Si 3 doubles alors le joueur va en prison.
+        printf("3 DOUBLES D'AFFILE !!!\n"
+               ">Trop de chance finit par porter mal chance ! Allez directement en prison :c\n");
+        *lanceDeDes = 1;
+        return 0;                                   //inutile de return la somme puisque le joueur va en prison.
+    }
 }
 
 int nouvellePosition(int actuelle, int sommeDes){
@@ -131,6 +135,8 @@ int nouvellePosition(int actuelle, int sommeDes){
 //Initialisation de la liste de joueurs ( nombre, nom, argent, position sur le plateau ).
 Joueur* initJoueur(int* nbJoueurs) {
 
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     //initialisation des variables utiles.
     int i=0;
     int alea=0;
@@ -138,6 +144,7 @@ Joueur* initJoueur(int* nbJoueurs) {
     char flush;
 
     //Entrée du nombre de joueurs ainsi que de leurs noms.
+    SetConsoleTextAttribute(hConsole,5);
     printf("\n=====| Combien de joueur etes-vous ? |=====\n>");
     *nbJoueurs = verifChoix();
     Joueur* listeJoueurs = (Joueur*) malloc(*nbJoueurs * sizeof(Joueur) );
@@ -157,7 +164,9 @@ Joueur* initJoueur(int* nbJoueurs) {
         listeJoueurs[i].maisons = 0;
         listeJoueurs[i].hotel = 0;
         listeJoueurs[i].faillite = false;
+        SetConsoleTextAttribute(hConsole,10);
         printf("Banque: Vous recevez 1500 euros de bienvenue.\n");
+        SetConsoleTextAttribute(hConsole,5);
     }
 
     //On mélange l'ordre des joueurs dans la liste.
@@ -170,8 +179,12 @@ Joueur* initJoueur(int* nbJoueurs) {
     }
     printf("\nVos numeros de joueurs ont ete modifies, voici le nouvel ordre de passage :\n");
     for(i=0;i<*nbJoueurs;i++){
-        printf("Joueur %d = %s\n",i+1,listeJoueurs[i].nomJoueur);
+        printf("Joueur %d = ",i+1);
+        SetConsoleTextAttribute(hConsole,14);
+        printf("%s\n",listeJoueurs[i].nomJoueur);
+        SetConsoleTextAttribute(hConsole,5);
     } printf("\n");
+    SetConsoleTextAttribute(hConsole,7);
 
     return listeJoueurs;
 }
@@ -187,12 +200,12 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
         affichagePlateau(listeJoueurs,nbJoueurs,cases);
         for (int i = 0; i < *nbJoueurs; i++) {
             //Initialisation des variables a chaque tour de chaque joueurs.
-            int lanceDeDes = 0;
+            int nbDoubles =0, lanceDeDes = 0;
             int position = 0, sommeDes = 0;
 
             printf("> ********************* C'est a %s de joueur ! *********************\n", listeJoueurs[i].nomJoueur);
             do {
-                printf("Solde : %d euros - Case %d : %s\n",listeJoueurs[i].money,listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
+                printf("\n==| Votre solde : %d euros - Case %d : %s |==\n",listeJoueurs[i].money,listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
                 if(listeJoueurs[i].faillite == true){
                     printf("Vous etes en faillite, trouvez de l'argent avant la fin de votre tour sinon vous serez elimine\n");
                 }
@@ -227,7 +240,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         //S'il n'a pas déjà lancé alors il peut les lancer.
                         //On enregistre la position précédente du joueur et le retour de la fonction lancerLesDes.
                         position = listeJoueurs[i].position;
-                        sommeDes = lancerLesDes();
+                        sommeDes = lancerLesDes(&nbDoubles,&lanceDeDes);
 
                         //La procédure lancerLesDes renvoie 0 si le joueur a fait 3 doubles d'affilée.
                         //On le met donc en prison.
@@ -249,7 +262,6 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         //Affichage position joueur sur le plateau.
                         //Et des différentes actions correspondantes.
                         positionPlateau(listeJoueurs,nbJoueurs,cases,i,listeCartesChance,listeCartesComm,nbCarteC,nbCarteComm);
-
                         break;
                     case 2 :
                         //Acheter une propriete.
@@ -267,6 +279,38 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         //Hypothéquer une propriété.
                         hypothequer(listeJoueurs,i,cases,banque);
                         break;
+                    case 6:
+                        break;
+                    case 7:
+                        //Menu Principal
+                        printf("=====| Que souhaitez vous faire ? |=======================|\n");
+                        printf("1/ Sauvegarder la partie en cours.                        |\n"
+                               "2/ Charger une ancienne partie.                           |\n"
+                               "3/ Afficher les regles.                                   |\n"
+                               "4/ Afficher le nom des membres de l'equipe du projet.     |\n"
+                               "5/ Quitter.                                               |\n");
+                        printf("==========================================================|\n>");
+                        choixbis = verifChoix();
+                        switch (choixbis) {
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                afficherNomsEquipeProjet();
+                                break;
+                            case 5:
+                                //Revenir à l'écran d'accueil.
+                                return;
+                            default:
+                                puts("Choix invalide !");
+                                break;
+                        }
+
+
+
                     case 0:
                         //Passer son tour.
                         if(listeJoueurs[i].faillite == true){
