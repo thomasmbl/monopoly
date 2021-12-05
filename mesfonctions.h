@@ -52,6 +52,9 @@ typedef struct{
 
 
 void menuPrincipal();
+
+void sauvegarder(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque);
+
 void verifArgent(Joueur* listeJoueurs,int i,int aSoustraire);
 void supprimerJoueur(Joueur* listeJoueurs, int i,int* nbJoueurs);
 void menuJoueur();
@@ -81,11 +84,9 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
 void afficherNomsEquipeProjet();
 
-void quitter();
 
 
 
 
 #endif //PROJET_MONOPOLY_MESFONCTIONS_H
-
 

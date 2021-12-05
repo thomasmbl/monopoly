@@ -439,10 +439,10 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                 ,cases[listeJoueurs[i].position-1].nbHotel
                 ,cases[listeJoueurs[i].position-1].prix-cases[listeJoueurs[i].position-1].loyerMaisons[0]);
 
-        if( !(strcmp(listeJoueurs[i].nomJoueur,"Disponible") == 0)
-                            &&
+        if( strcmp(listeJoueurs[i].nomJoueur, "Disponible") != 0
+           &&
             strcmp(listeJoueurs[i].nomJoueur,cases[listeJoueurs[i].position-1].proprio) != 0
-                            &&
+           &&
             cases[listeJoueurs[i].position-1].hypotheque == false ){
 
             //On paye le loyer au joueur correspondant
@@ -458,7 +458,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                     else if( cases[listeJoueurs[i].position-1].nbMaisons > 0 ){
 
                         printf("Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]
-                                                                 ,listeJoueurs[j].nomJoueur);
+                                ,listeJoueurs[j].nomJoueur);
 
                         verifArgent(listeJoueurs,i,cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]);
                         listeJoueurs[j].money += cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ];

@@ -188,4 +188,3 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
 
 
 
-

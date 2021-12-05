@@ -119,9 +119,7 @@ void lancerDesPrison(Joueur* listeJoueurs, Case* cases, int i, int* lanceDeDes){
         *lanceDeDes = 1;
 
         if(de1==de2) {
-            printf("Dés : %d et %d\n"
-                   "Bravo vous etes libre !\n"
-                   "Vous avancez de %d cases.\n",2*de1);
+            printf("Des : %d et %d : Bravo vous etes libre ! ===> Vous avancez de %d cases.\n",de1,de2,2*de1);
             listeJoueurs[i].prison = 0;
             listeJoueurs[i].tourEnPrison = 0;
             listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position, de1 + de2);

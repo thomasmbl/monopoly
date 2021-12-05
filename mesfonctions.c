@@ -27,6 +27,38 @@ void menuPrincipal() {
     printf("==========================================================|\n>");
 }
 
+void sauvegarder(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque){
+    FILE* pf = NULL;
+    printf("Sauvegarde en cours\n");
+    if((pf = fopen("./sauvegarde1.dat","w"))==NULL){
+        printf("Erreur d'ouverture du fichier.\n");
+    }
+    fwrite(nbJoueurs,sizeof(int),1,pf);
+    if( fwrite(listeJoueurs,sizeof(Joueur),*nbJoueurs,pf) != *nbJoueurs ) {
+        printf("Problemes d'ecriture dans le fichier\n");
+    }
+    if( fwrite(cases,sizeof(Case),32,pf) != 32 ) {
+        printf("Problemes d'ecriture dans le fichier\n");
+    }
+    fwrite(nbCarteC,sizeof(int),1,pf);
+    fwrite(nbCarteComm,sizeof(int),1,pf);
+    if( fwrite(listeCartesChance,sizeof(char*),*nbCarteC,pf) != *nbCarteC ) {
+        printf("Problemes d'ecriture dans le fichier\n");
+    }
+    if( fwrite(listeCartesComm,sizeof(char*),*nbCarteComm,pf) != *nbCarteComm ) {
+        printf("Problemes d'ecriture dans le fichier\n");
+    }
+    fwrite(banque,sizeof(Banque),1,pf);
+
+    puts("Partie sauvegarde!");
+    fclose(pf);
+    pf = NULL;
+}
+
+void charger(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque){
+
+}
+
 int verifChoix(){
     char chaine[30];
     int entier=0;
@@ -46,7 +78,7 @@ void verifArgent(Joueur* listeJoueurs,int i,int aSoustraire){
                "Vous etes placez en faillite, si vous ne trouvez pas de l'argent avant la fin de votre tour,\n"
                "sous serez elimine de la partie !\n");
         listeJoueurs[i].money -= aSoustraire;           //On soustrait qd même pour que le joueur puisse rembourser
-                                                        //sa "dette" mais on le place en état de faillite.
+        //sa "dette" mais on le place en état de faillite.
         listeJoueurs[i].faillite = true;
     }
     else{
@@ -68,7 +100,6 @@ void supprimerJoueur(Joueur* listeJoueurs, int i,int* nbJoueurs){
         }
     }
 }
-
 
 void menuJoueur(){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -202,6 +233,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    //DebutPartie:
     do {
         tour += 1;
         SetConsoleTextAttribute(hConsole,5);
@@ -308,12 +340,19 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         choixbis = verifChoix();
                         switch (choixbis) {
                             case 1:
+                                //Sauvegarder la partie.
+                                sauvegarder(nbJoueurs,listeJoueurs,cases,listeCartesChance,listeCartesComm,nbCarteC,nbCarteComm,banque);
                                 break;
                             case 2:
+                                //Charger une partie.
+
                                 break;
                             case 3:
+                                //Afficher les regles.
+                                printf("Affichage des regles....");
                                 break;
                             case 4:
+                                //Afficher le nom des membres de l'équipe du projet.
                                 afficherNomsEquipeProjet();
                                 break;
                             case 5:
@@ -367,7 +406,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
            "                                                      \n"
            "                  Argent : %d euros                   \n"
            "*--------------*|====================|*--------------*\n\n"
-           ,listeJoueurs[0].nomJoueur,listeJoueurs[0].money );
+            ,listeJoueurs[0].nomJoueur,listeJoueurs[0].money );
     SetConsoleTextAttribute(hConsole,7);
 
 
@@ -388,29 +427,6 @@ void afficherNomsEquipeProjet(){
 
 
 //====================================================================================================================//
-//Procédure en référence au choix 6 du menu principal.
-void quitter(){
-    char verifChoix[4];
-    char flush;
-    do{
-        printf("Etes vous sur de vouloir quitter ?\n"
-               "OUI ou NON\n>");
-        scanf("%s",&verifChoix);
-        scanf("%c",&flush);
-
-        //Comparaison de chaînes pour savoir si ce que l'utilisateur à entré est valide ou non.
-        if( strcmp(verifChoix,"oui") == 0 || strcmp(verifChoix,"OUI") == 0 ){              //stcrmp return 0 si les 2
-            printf("A très bientot !\n");                                                  //chaînes sont identiques.
-            break;
-        }
-        else if( strcmp(verifChoix,"non") == 0 || strcmp(verifChoix,"NON") == 0 ){
-            break;
-        }
-    }while( (strcmp(verifChoix,"oui") != 0 && strcmp(verifChoix,"OUI") != 0)
-            &&
-            (strcmp(verifChoix,"non") != 0 && strcmp(verifChoix,"NON")) != 0 );
-
-}
 
 
 

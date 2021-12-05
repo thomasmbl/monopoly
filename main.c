@@ -37,7 +37,7 @@ int main() {
 
     SetConsoleTextAttribute(hConsole,14);
     printf(                                          " |=====================|\n"
-           "|=*************************************************************=|\n\n");
+                                                     "|=*************************************************************=|\n\n");
     SetConsoleTextAttribute(hConsole,7);
 
 
@@ -82,6 +82,7 @@ int main() {
 
             case 4 :
                 //Afficher les regles.
+                printf("Affichage des regles....");
                 break;
 
             case 5 :
@@ -91,7 +92,6 @@ int main() {
 
             case 6 :
                 //Quitter.
-                quitter();
                 break;
 
             default : {
