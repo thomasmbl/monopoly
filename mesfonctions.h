@@ -17,11 +17,11 @@ typedef struct{
     int groupe;             //Groupe auquel elle appartient (1 à 8).
     int prix;               //Prix de la propriété.
     char* proprio;          //Nom du joueur qui possèderait cette propriété.
-    int loyerMaisons[4];    //Loyer en fonction du nb de maison sur la propriete
-    int nbMaisons;          //nbMaisons acheté sur la propriete. 0 à 4
+    int loyerMaisons[4];    //Loyer en fonction du nb de maison sur la propriété
+    int nbMaisons;          //nbMaisons acheté sur la propriété. 0 à 4
 
     int loyerHotel;         //Loyer hotel
-    int nbHotel;            //nbHotel acheté sur la propriete. 0 ou 1
+    int nbHotel;            //nbHotel acheté sur la propriété. 0 ou 1
 
     bool hypotheque;        //true / false
 
@@ -37,16 +37,16 @@ typedef struct{
     int nbCSP;              //nombre de cartes sortie de prison que le joueur possède 0,1 ou 2.
 
     int prop;               //Nombre de prop (non hypothéqué) que possède le joueur
-    int maisons;            //Nombre de maison du joueur
-    int hotel;              //Nombre d'hotel du joueur
+    int maisons;            //Nombre de maisons du joueur
+    int hotel;              //Nombre d'hôtels du joueur
 
     bool faillite;          //false par défaut.
 } Joueur;
 
 //Structure Banque.
 typedef struct{
-    int maison;             //nb de maisons que possede la banque ( 32 )
-    int hotel;              //nb d'hotels que possede la banque   ( 12 )
+    int maison;             //nb de maisons que possède la banque ( 32 )
+    int hotel;              //nb d'hôtels que possède la banque   ( 12 )
 }Banque;
 
 
@@ -64,23 +64,9 @@ int verifChoix();
 int lancerLesDes(int* nbDoubles,int* lanceDeDes);
 int nouvellePosition(int actuelle, int sommeDes);
 
-
-
-
-
 Joueur* initJoueur(int* nbJoueurs);
 
-
-
 void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int*  nbCarteComm, Banque* banque);
-
-
-
-
-
-
-
-
 
 void afficherNomsEquipeProjet();
 

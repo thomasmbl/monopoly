@@ -19,16 +19,17 @@
 void menuPrincipal() {
     printf("=====| Que souhaitez vous faire ? |=======================|\n");
     printf("1/ Lancer une nouvelle partie.                            |\n"
-           "2/ Sauvegarder la partie en cours.                        |\n"
-           "3/ Charger une ancienne partie.                           |\n"
-           "4/ Afficher les regles.                                   |\n"
-           "5/ Afficher le nom des membres de l'equipe du projet.     |\n"
-           "6/ Quitter.                                               |\n");
+           "2/ Charger une ancienne partie.                           |\n"
+           "3/ Afficher les regles.                                   |\n"
+           "4/ Afficher le nom des membres de l'equipe du projet.     |\n"
+           "5/ Quitter.                                               |\n");
     printf("==========================================================|\n>");
 }
 
 void sauvegarder(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque){
+
     FILE* pf = NULL;
+
     printf("Sauvegarde en cours\n");
     if((pf = fopen("./sauvegarde1.dat","w"))==NULL){
         printf("Erreur d'ouverture du fichier.\n");
@@ -53,19 +54,26 @@ void sauvegarder(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** liste
     puts("Partie sauvegarde!");
     fclose(pf);
     pf = NULL;
-}
 
-void charger(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque){
 
 }
 
 int verifChoix(){
     char chaine[30];
     int entier=0;
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     fflush(stdout);
     fgets(chaine,sizeof chaine,stdin);
-    while( !((entier=atoi(chaine)) || *chaine=='0' )){
-        printf("Choix invalide! Entrez un entier\n>");
+    while( !((entier=atoi(chaine)) || *chaine=='0' )){      //la fonction atoi : ASCII to Integer renvoie 0 si chaine est un caractère.
+
+        SetConsoleTextAttribute(hConsole,4);
+        puts("Choix invalide! Entrez un entier");
+        SetConsoleTextAttribute(hConsole,5);
+        printf(">");
+        SetConsoleTextAttribute(hConsole,7);
+
         fflush(stdout);
         fgets(chaine,sizeof chaine,stdin);
     }
@@ -73,12 +81,19 @@ int verifChoix(){
 }
 
 void verifArgent(Joueur* listeJoueurs,int i,int aSoustraire){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     if(listeJoueurs[i].money - aSoustraire < 0 ){
-        printf("Vous n'avez pas assez d'argent pour payer vos dettes !\n"
-               "Vous etes placez en faillite, si vous ne trouvez pas de l'argent avant la fin de votre tour,\n"
+
+        SetConsoleTextAttribute(hConsole,4);
+        printf("Vous n'avez pas assez d'argent pour payer vos dettes !\n");
+        SetConsoleTextAttribute(hConsole,5);
+        printf("Vous etes placez en faillite, si vous ne trouvez pas de l'argent avant la fin de votre tour,\n"
                "sous serez elimine de la partie !\n");
+        SetConsoleTextAttribute(hConsole,7);
+
         listeJoueurs[i].money -= aSoustraire;           //On soustrait qd même pour que le joueur puisse rembourser
-        //sa "dette" mais on le place en état de faillite.
+                                                        //sa "dette" mais on le place en état de faillite.
         listeJoueurs[i].faillite = true;
     }
     else{
@@ -127,7 +142,7 @@ int lancerLesDes(int* nbDoubles,int* lanceDeDes){
     de1 = rand()%6+1;
     de2 = rand()%6+1;
 
-    somme += de1 + de2;
+    somme = de1 + de2;
 
     printf("\nde1 = %d\nde2 = %d\n==> ", de1, de2);
 
@@ -136,7 +151,7 @@ int lancerLesDes(int* nbDoubles,int* lanceDeDes){
         *lanceDeDes = 1;
         return somme;
     }
-    else if(de1==de2){
+    else if(de1==de2 && *nbDoubles < 3 ){
         printf("Vous avez fait un DOUBLE!\n>Vous avez le droit a un autres lance de des.\n");
         *nbDoubles += 1;
         return somme;
@@ -186,6 +201,7 @@ Joueur* initJoueur(int* nbJoueurs) {
 
     for(i=0;i<*nbJoueurs;i++){
         listeJoueurs[i].nomJoueur = (char*) malloc(sizeof(char));
+        SetConsoleTextAttribute(hConsole,5);
         printf("\nEntrez le nom du joueur %d :",i+1);
         scanf("%s", listeJoueurs[i].nomJoueur);
         scanf("%c",&flush);
@@ -225,7 +241,8 @@ Joueur* initJoueur(int* nbJoueurs) {
     return listeJoueurs;
 }
 
-void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm,Banque* banque) {
+
+void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** listeCartesChance, char** listeCartesComm, int* nbCarteC,int* nbCarteComm, Banque* banque) {
     int tour = 0;
     int choix = 0;
     int choixbis = 0;
@@ -233,7 +250,6 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    //DebutPartie:
     do {
         tour += 1;
         SetConsoleTextAttribute(hConsole,5);
@@ -246,19 +262,21 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
 
         affichagePlateau(listeJoueurs,nbJoueurs,cases);
         for (int i = 0; i < *nbJoueurs; i++) {
-            //Initialisation des variables a chaque tour de chaque joueurs.
+            //Initialisation des variables a chaque tour de chaque joueur.
             int nbDoubles =0, lanceDeDes = 0;
             int position = 0, sommeDes = 0;
 
-            printf("> ********************* C'est a %s de joueur ! *********************\n", listeJoueurs[i].nomJoueur);
+            SetConsoleTextAttribute(hConsole,14);
+            printf("=======*********************| C'est a %s de joueur ! |*********************=======\n", listeJoueurs[i].nomJoueur);
+            SetConsoleTextAttribute(hConsole,7);
             do {
-                printf("\n==| Votre solde : %d euros - Case %d : %s |==\n",listeJoueurs[i].money,listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
+                printf("\n* Votre solde : %d euros - Case %d : %s\n",listeJoueurs[i].money,listeJoueurs[i].position,cases[listeJoueurs[i].position-1].nomCase);
                 if(listeJoueurs[i].faillite == true){
                     printf("Vous etes en faillite, trouvez de l'argent avant la fin de votre tour sinon vous serez elimine\n");
                 }
 
                 //Si le joueur est en prison, on affiche les options qui lui sont possible pour en sortir.
-                optionPrison(listeJoueurs,i,listeCartesChance,nbCarteC,listeCartesComm,nbJoueurs);
+                optionPrison(listeJoueurs,i,listeCartesChance,nbCarteC,listeCartesComm,nbCarteComm,nbJoueurs);
 
                 //On affiche le menu joueur.
                 menuJoueur();
@@ -275,12 +293,17 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                             if(lanceDeDes != 1)
                                 lancerDesPrison(listeJoueurs,cases,i,&lanceDeDes);
                             else
+                                SetConsoleTextAttribute(hConsole,4);
                                 printf("Vous avez deja lance les des!\n");
+                                SetConsoleTextAttribute(hConsole,7);
+                                break;
                         }
 
                         //On vérifie si le joueur (hors cas de prison) n'a pas déjà lancé les dés.
                         if(lanceDeDes == 1){
+                            SetConsoleTextAttribute(hConsole,4);
                             printf("Vous avez deja lance les des!\n");
+                            SetConsoleTextAttribute(hConsole,7);
                             break;
                         }
 
@@ -345,7 +368,6 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                                 break;
                             case 2:
                                 //Charger une partie.
-
                                 break;
                             case 3:
                                 //Afficher les regles.
@@ -376,7 +398,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                                 case 1:
                                     //Le joueur est elimine.
                                     //Procédure qui le supprime de la liste des joueurs.
-                                    printf("Joueur %d : %s est elimine !\n",i,listeJoueurs[i].nomJoueur);
+                                    printf("Joueur %d : %s est elimine !\n",i+1,listeJoueurs[i].nomJoueur);
                                     supprimerJoueur(listeJoueurs,i,nbJoueurs);
                                     *nbJoueurs -= 1;
                                     i-=1;
@@ -393,14 +415,16 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
                         }
                         break;
                     default :
+                        SetConsoleTextAttribute(hConsole,4);
                         printf("Choix invalide!\n");
+                        SetConsoleTextAttribute(hConsole,7);
                         break;
                 }
             }while (choix != 0 && *nbJoueurs > 1);
         }
     }while (*nbJoueurs > 1);
     SetConsoleTextAttribute(hConsole,14);
-    printf("\n                    __________                      \n"
+    printf("\n                      __________                      \n"
            "*--------------*|======MONOPOLY======|*--------------*\n"
            "                  GAGNANT : %s                        \n"
            "                                                      \n"
@@ -414,6 +438,7 @@ void nouvellePartie(int* nbJoueurs, Joueur* listeJoueurs, Case* cases, char** li
         free(listeJoueurs[i].nomJoueur);
     }
     free(listeJoueurs);
+    free(cases);
 }
 
 

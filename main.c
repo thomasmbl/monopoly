@@ -36,8 +36,8 @@ int main() {
     printf("2021");
 
     SetConsoleTextAttribute(hConsole,14);
-    printf(                                          " |=====================|\n"
-                                                     "|=*************************************************************=|\n\n");
+    printf(" |=====================|\n"
+           "|=*************************************************************=|\n\n");
     SetConsoleTextAttribute(hConsole,7);
 
 
@@ -70,36 +70,32 @@ int main() {
                 nouvellePartie(&nbJoueurs,listeJoueurs,cases,listeCartesChance,listeCartesComm,&nbCarteC,&nbCarteComm,&banque);
 
                 break;
-
             case 2 :
-                //Sauvegarder la partie en cours.
+                //Charger une ancienne partie.
                 break;
 
             case 3 :
-                //Charger une ancienne partie.
-                //                       Faire passer la variable tour en paramètre via un pointeur.
-                break;
-
-            case 4 :
                 //Afficher les regles.
                 printf("Affichage des regles....");
                 break;
 
-            case 5 :
+            case 4 :
                 //Afficher le nom des membres de l'équipe du projet.
                 afficherNomsEquipeProjet();
                 break;
 
-            case 6 :
+            case 5 :
                 //Quitter.
                 break;
 
             default : {
+                SetConsoleTextAttribute(hConsole,4);
                 printf("Choix invalide !\n\n");
+                SetConsoleTextAttribute(hConsole,7);
                 break;
             }
         }
-    }while(choix != 6);
+    }while(choix != 5);
 
 
     return 0;

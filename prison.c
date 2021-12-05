@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nbCarteC,char** listeCartesComm, int* nbJoueurs){
+void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nbCarteC,char** listeCartesComm, int* nbCarteComm, int* nbJoueurs){
     if(listeJoueurs[i].prison == 1){
         printf("Vous etes en prison ! Pour vous en echapper :\n"
                "\t- Faire un double sur l'un de vos %d prochains tours.\n"
@@ -27,12 +27,15 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
             switch(choix){
                 case 1:
                     listeJoueurs[i].nbCSP -= 1;
+                    listeJoueurs[i].prison = 0;
                     if(*nbCarteC==9){
-                        strcpy(listeCartesChance[9],"Carte sortez de prison");
+                        listeCartesChance[9]="Carte sortez de prison";
+                        *nbCarteC+=1;
                         break;
                     }
                     else{
-                        strcpy(listeCartesComm[9],"Carte sortez de prison");
+                        listeCartesComm[9]="Carte sortez de prison";
+                        *nbCarteComm+=1;
                         break;
                     }
                 case 2:
@@ -43,7 +46,7 @@ void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nb
             }
         }
         else{
-            printf("Joueur(s) qui en possède au moins une : \n");
+            printf("Joueur(s) qui en possede au moins une : \n");
             for(int j=0;j<*nbJoueurs;j++){
 
                 if(listeJoueurs[j].nbCSP >= 1){

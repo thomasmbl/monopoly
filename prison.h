@@ -7,7 +7,7 @@
 
 #include "mesfonctions.h"
 
-void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nbCarteC,char** listeCartesComm, int* nbJoueurs);
+void optionPrison(Joueur* listeJoueurs, int i, char** listeCartesChance, int* nbCarteC,char** listeCartesComm, int* nbCarteComm, int* nbJoueurs);
 
 void lancerDesPrison(Joueur* listeJoueurs, Case* cases, int i, int* lanceDeDes);
 

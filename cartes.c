@@ -47,7 +47,7 @@ void initCarteCommunaute(char** listeCartesComm){
     listeCartesComm[2] = "Carte sortie de prison";
     listeCartesComm[3] = "Allez directement en prison, vous ne passez pas par la case depart";
     listeCartesComm[4] = "Vous faites un vide grenier et gagnez 30euros";
-    listeCartesComm[5] = "C’est votre anniversaire, collectez 10euros de chaque joueur";
+    listeCartesComm[5] = "C'est votre anniversaire, collectez 10euros de chaque joueur";
     listeCartesComm[6] = "Vous recuperez des rentes : gagnez 100euros";
     listeCartesComm[7] = "Payez des frais d'hopital de 100euros";
     listeCartesComm[8] = "Vous avez obtenu la seconde place d’un concours de beaute : gagnez 10euros";
@@ -76,7 +76,7 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
         return 1;
     }
     else{
-        if(strcmp(listeCartes[0],"Allez a la case de depart. (Collectez 200euros)")==0){
+        if(strcmp(listeCartes[0],"Allez a la case depart. (Collectez 200euros)")==0){
             listeJoueurs[i].position = 1;
             listeJoueurs[i].money += 200;
         }
@@ -97,12 +97,7 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
             listeJoueurs[i].money += 50;
         }
         if(strcmp(listeCartes[0],"Reculez de 3 cases")==0){
-            if( listeJoueurs[i].position - 3 >= 0 ){
-                nouvellePosition(listeJoueurs[i].position,3);
-            }
-            else{
-                nouvellePosition(listeJoueurs[i].position,-3);
-            }
+            listeJoueurs[i].position = nouvellePosition(listeJoueurs[i].position,-3);
         }
         if(strcmp(listeCartes[0],"Allez directement en prison, vous ne passez pas par la case depart")==0){
             listeJoueurs[i].position = 9;
@@ -139,7 +134,7 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
         if(strcmp(listeCartes[0],"Vous faites un vide grenier et gagnez 30euros")==0){
             listeJoueurs[i].money += 30;
         }
-        if(strcmp(listeCartes[0],"C’est votre anniversaire, collectez 10euros de chaque joueur")==0){
+        if(strcmp(listeCartes[0],"C'est votre anniversaire, collectez 10euros de chaque joueur")==0){
             for(int j=0;j<*nbJoueurs;j++){
                 if(i==j);
                 else{
@@ -162,10 +157,10 @@ int tirerCarte(char** listeCartes, int* nbCartes, Joueur* listeJoueurs,int i, in
         if(strcmp(listeCartes[0],"Vous recuperez des rentes : gagnez 100euros")==0){
             listeJoueurs[i].money += 100;
         }
-        if(strcmp(listeCartes[0],"Payez des frais d hopital de 100euros")==0){
+        if(strcmp(listeCartes[0],"Payez des frais d'hopital de 100euros")==0){
             verifArgent(listeJoueurs,i,100);
         }
-        if(strcmp(listeCartes[0],"Vous avez obtenu la seconde place d un concours de beaute : gagnez 10euros")==0){
+        if(strcmp(listeCartes[0],"Vous avez obtenu la seconde place d'un concours de beaute : gagnez 10euros")==0){
             listeJoueurs[i].money += 10;
         }
         if(strcmp(listeCartes[0],"Vous héritez de 100euros")==0){

@@ -412,7 +412,7 @@ void affichagePlateau(Joueur* listeJoueurs,int* nbJoueurs,Case* cases) {
 }
 
 void depart(Joueur* listeJoueurs, int i, int position, int sommeDes){
-    if( listeJoueurs[i].position == 1 || position+sommeDes >= 32 ){
+    if( listeJoueurs[i].position == 1 || position+sommeDes > 32 ){
         printf("\nBanque: Passage par la case depart, vous recevez 200 euros!\n");
         listeJoueurs[i].money += 200;
     }
@@ -425,8 +425,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
     //Type de case
     //Si le joueur se trouve sur une propriété, on affiche les informations utiles.
     if(cases[listeJoueurs[i].position-1].typeCase == 1){
-        printf("==> Vous vous trouvez sur une case PROPRIETE\n"
-               "\tStatus : %s\n"
+        printf("\n\n\tStatus : %s\n"
                "\tPrix d'achat : %d euros\n"
                "\tGroupe : %d\n"
                "\tNb Maisons : %d / 4\n"
@@ -450,14 +449,14 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                 if( strcmp( listeJoueurs[j].nomJoueur,cases[listeJoueurs[i].position-1].proprio ) == 0 ){
                     if( cases[listeJoueurs[i].position-1].nbMaisons == 0 && cases[listeJoueurs[i].position-1].nbHotel == 0 ){
 
-                        printf("Vous devez payer %d euros a %s\n",cases[listeJoueurs[i].position-1].prix / 5,listeJoueurs[j].nomJoueur);
+                        printf("\nLoyer : Vous devez payer %d euros a %s\n",cases[listeJoueurs[i].position-1].prix / 5,listeJoueurs[j].nomJoueur);
 
                         verifArgent(listeJoueurs,i,cases[listeJoueurs[i].position-1].prix / 5);
                         listeJoueurs[j].money += cases[listeJoueurs[i].position-1].prix / 5 ;
                     }
                     else if( cases[listeJoueurs[i].position-1].nbMaisons > 0 ){
 
-                        printf("Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]
+                        printf("\nLoyer : Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]
                                 ,listeJoueurs[j].nomJoueur);
 
                         verifArgent(listeJoueurs,i,cases[ listeJoueurs[i].position-1 ].loyerMaisons[ cases[listeJoueurs[i].position-1].nbMaisons-1 ]);
@@ -465,7 +464,7 @@ void positionPlateau(Joueur* listeJoueurs,int* nbJoueurs, Case* cases, int i, ch
                     }
                     else if( cases[listeJoueurs[i].position-1].nbHotel == 1 ){
 
-                        printf("Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerHotel,listeJoueurs[j].nomJoueur);
+                        printf("\nLoyer : Vous devez payer %d euros a %s\n",cases[ listeJoueurs[i].position-1 ].loyerHotel,listeJoueurs[j].nomJoueur);
 
                         verifArgent(listeJoueurs,i,cases[ listeJoueurs[i].position-1 ].loyerHotel);
                         listeJoueurs[j].money += cases[ listeJoueurs[i].position-1 ].loyerHotel;
